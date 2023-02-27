@@ -4,6 +4,7 @@ import Shotoku from "./1_shotoku/shotoku_base";
 import SonekiTsusan from "./2_soneki_tsusan/soneki_tsusan_base"
 import KazeiShotoku from "./3_kazei_shotoku/kazei_shotoku_base";
 import ShotokuHokenryoEasyInput from "./utils/shotoku_hokenryo_modal";
+import Tax from "./4_tax/tax";
 
 function App() {
 
@@ -120,6 +121,10 @@ function App() {
             <KazeiShotoku
                 kojoData={wholeStatement.kojo}
                 changeKojo={changeKojo}
+            />
+
+            <Tax
+                taxData={wholeStatement.tax}
             />
         </div>
     );
