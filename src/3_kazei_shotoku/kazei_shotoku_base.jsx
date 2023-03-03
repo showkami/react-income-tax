@@ -196,11 +196,11 @@ function KazeiShotoku({kojoData, changeKojo}) {
 
             <Statistic
                 title={"所得税の課税基準所得からの" + kojoTypes[activeTabKey]["label"] + "額"}
-                value={kojoData[activeTabKey]["fromShotokuTax"]}
+                value={kojoData[activeTabKey]["kojo_fromShotokuTax"]}
             />
             <Statistic
                 title={"住民税の課税基準所得からの" + kojoTypes[activeTabKey]["label"] + "額"}
-                value={kojoData[activeTabKey]["fromJuminTax"]}
+                value={kojoData[activeTabKey]["kojo_fromJuminTax"]}
             />
         </Card>
     )
