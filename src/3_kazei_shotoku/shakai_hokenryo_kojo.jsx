@@ -5,8 +5,8 @@ function ShakaiHokenryoKojo({kojoTypeKey, kojoData, changeKojo}) {
 
     function changeShakaiHokenryoKojo(paid_amount){
         let newKojoData = {...kojoData};
-        newKojoData[kojoTypeKey].kojo_fromShotokuTax = paid_amount;  // 支払った保険料の全額が控除対象
-        newKojoData[kojoTypeKey].kojo_fromJuminTax = paid_amount;  // 支払った保険料の全額が控除対象
+        newKojoData[kojoTypeKey].fromShotokuTax = paid_amount;  // 支払った保険料の全額が控除対象
+        newKojoData[kojoTypeKey].fromJuminTax = paid_amount;  // 支払った保険料の全額が控除対象
         changeKojo(newKojoData);
         console.log("newKojoData=", newKojoData);
         

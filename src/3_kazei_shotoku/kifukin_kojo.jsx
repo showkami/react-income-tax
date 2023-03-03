@@ -9,8 +9,8 @@ function KifukinKojo({kojoTypeKey, kojoData, changeKojo}) {
         // 所得税課税所得からの控除額は、 paid_amount - 2_000
         // 住民税課税所得からの控除はなし
         let newKojoData = {...kojoData};
-        newKojoData[kojoTypeKey].kojo_fromShotokuTax = Math.max(paid_amount - 2_000, 0);
-        newKojoData[kojoTypeKey].kojo_fromJuminTax = 0;
+        newKojoData[kojoTypeKey].fromShotokuTax = Math.max(paid_amount - 2_000, 0);
+        newKojoData[kojoTypeKey].fromJuminTax = 0;
         changeKojo(newKojoData);
         console.log("newKojoData=", newKojoData);
         

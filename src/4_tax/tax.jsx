@@ -2,19 +2,20 @@ import { render } from "@testing-library/react";
 import { Button, Modal, Table } from "antd";
 import React, { useState } from "react";
 
-function Tax(){
+function Tax({shotoku, kojo}){
     
     const [isShowTaxResult, setIsShowTaxResult] = useState(false);
 
     function renderTaxTable(){
         const columns = [
-            {title: 'a', dataIndex: 'ind', key: 'key'}
+            {dataIndex: 'calcShotokuTax', key: 'calcShotokuTax', title: '所得税の計算'},
+            {dataIndex: 'calcJuminTax', key: 'calcJuminTax', title: '住民税の計算'},
         ];
         const dataSource = [
-            {
-                test: 'test'
-            }
+            // 所得控除の羅列
+            {key: '1', calcShotokuTax: kojo.zasson.fromShotokuTax, calcJuminTax: kojo.zasson.fromJuminTax},
         ];
+        console.log('dataSource=', dataSource)
         return (
             <>
                 <Table
