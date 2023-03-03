@@ -18,76 +18,76 @@ function App() {
     });
 
     const [kojo, setKojo] = useState({
-        // 所得控除項目キー: {"is_applicable": T/F, "kojo_fromShotokuTax": 所得税からの控除額, "kojo_fromJuminTax": 住民税からの控除額, ....}
+        // 所得控除項目キー: {"is_applicable": T/F, "fromShotokuTax": 所得税からの控除額, "fromJuminTax": 住民税からの控除額, ....}
         zasson: {
             "is_applicable": false,
-            "kojo_fromShotokuTax": undefined,
-            "kojo_fromJuminTax": undefined,
+            "fromShotokuTax": undefined,
+            "fromJuminTax": undefined,
         },
-        iryo_hi: {
+        iryohi: {
             "is_applicable": false,
-            "kojo_fromShotokuTax": undefined,
-            "kojo_fromJuminTax": undefined,
+            "fromShotokuTax": undefined,
+            "fromJuminTax": undefined,
         },
         shakai_hokenryo: {
             "is_applicable": false,
-            "kojo_fromShotokuTax": undefined,
-            "kojo_fromJuminTax": undefined,
+            "fromShotokuTax": undefined,
+            "fromJuminTax": undefined,
         },
         shokibo_kiryo_kyosai: {
             "is_applicable": false,
-            "kojo_fromShotokuTax": undefined,
-            "kojo_fromJuminTax": undefined,
+            "fromShotokuTax": undefined,
+            "fromJuminTax": undefined,
         },
         seimei_hokenryo: {
             "is_applicable": false,
-            "kojo_fromShotokuTax": undefined,
-            "kojo_fromJuminTax": undefined,
+            "fromShotokuTax": undefined,
+            "fromJuminTax": undefined,
         },
         jishin_hokenryo: {
             "is_applicable": false,
-            "kojo_fromShotokuTax": undefined,
-            "kojo_fromJuminTax": undefined,
+            "fromShotokuTax": undefined,
+            "fromJuminTax": undefined,
         },
         kifukin: {
             "is_applicable": false,
-            "kojo_fromShotokuTax": undefined,
-            "kojo_fromJuminTax": undefined,
+            "fromShotokuTax": undefined,
+            "fromJuminTax": undefined,
         },
         shougaisha: {
             "is_applicable": false,
-            "kojo_fromShotokuTax": undefined,
-            "kojo_fromJuminTax": undefined,
+            "fromShotokuTax": undefined,
+            "fromJuminTax": undefined,
         },
         kafu: {
             "is_applicable": false,
-            "kojo_fromShotokuTax": undefined,
-            "kojo_fromJuminTax": undefined,
+            "fromShotokuTax": undefined,
+            "fromJuminTax": undefined,
         },
         hitorioya: {
             "is_applicable": false,
-            "kojo_fromShotokuTax": undefined,
-            "kojo_fromJuminTax": undefined,
+            "fromShotokuTax": undefined,
+            "fromJuminTax": undefined,
         },
         kinro_gakusei: {
             "is_applicable": false,
-            "kojo_fromShotokuTax": undefined,
-            "kojo_fromJuminTax": undefined,
+            "fromShotokuTax": undefined,
+            "fromJuminTax": undefined,
         },
         haigusha_tokubetsu: {
             "is_applicable": false,
-            "kojo_fromShotokuTax": undefined,
-            "kojo_fromJuminTax": undefined,
+            "fromShotokuTax": undefined,
+            "fromJuminTax": undefined,
         },
         fuyou: {
             "is_applicable": false,
-            "kojo_fromShotokuTax": undefined,
-            "kojo_fromJuminTax": undefined,
+            "fromShotokuTax": undefined,
+            "fromJuminTax": undefined,
         },
         kiso: {
             "is_applicable": true,
-            "kojo_fromShotokuTax": 480_000,
-            "kojo_fromJuminTax":   430_000,
+            "fromShotokuTax": 480_000,
+            "fromJuminTax":   430_000,
         },
 
     });
