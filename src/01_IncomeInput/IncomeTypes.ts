@@ -15,3 +15,6 @@ export const incomeTypes: IncomeType[] = [
   {"nameJp": "一時", "id": "occasional"},
   {"nameJp": "雑", "id": "miscellaneous"},
 ]
+
+const incomeTypeIds = incomeTypes.map((incomeType) => incomeType.id);
+export type IncomeTypeId = (typeof incomeTypeIds)[number];

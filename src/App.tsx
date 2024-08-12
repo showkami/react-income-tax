@@ -1,7 +1,7 @@
 import React from 'react';
 import {Accordion, AccordionDetails, AccordionSummary, Button} from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import Income from "./01_Income/Income";
+import {IncomeInput} from "./01_IncomeInput/Income";
 
 function App() {
   return (
@@ -11,12 +11,12 @@ function App() {
         給与明細からインプット
       </Button>
 
-      <Accordion>
+      <Accordion defaultExpanded>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           所得の計算
         </AccordionSummary>
         <AccordionDetails>
-          <Income />
+          <IncomeInput />
         </AccordionDetails>
       </Accordion>
 
