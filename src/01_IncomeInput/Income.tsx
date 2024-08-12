@@ -16,8 +16,8 @@ export const IncomeInput = ({incomeDict, setIncomeDict}: IncomeInputProps) => {
 
   const setSalaryIncome = (newValue: number) => {setIncomeDict((prev) => {return {...prev, salary: newValue}})};
 
-  const IncomeInputPanel = (incomeType: string) => {
-    switch (incomeType) {
+  const IncomeInputPanel = (incomeTypeId: string) => {
+    switch (incomeTypeId) {
       case "salary":
         return <SalaryIncomeInput salaryIncome={incomeDict.salary} setSalaryIncome={setSalaryIncome} />
       default:
@@ -27,7 +27,7 @@ export const IncomeInput = ({incomeDict, setIncomeDict}: IncomeInputProps) => {
 
   return (
     <>
-      <Tabs value={selectedTab} onChange={(evt, newValue)=>{ setSelectedTab(newValue)}}>
+      <Tabs variant={"scrollable"} scrollButtons={"auto"} value={selectedTab} onChange={(evt, newValue)=>{ setSelectedTab(newValue)}}>
         {incomeTypes.map((incomeType) => {
           return <Tab label={incomeType.nameJp} value={incomeType.id} />
         })}

@@ -8,7 +8,7 @@ const formatNumber = (val: number) => {
 type NumericFormProps = {
   label?: string,
   value: number,
-  setValue: React.Dispatch<React.SetStateAction<number>>,
+  setValue: (newValue: number) => void,
 }
 
 export const NumericForm = (props: NumericFormProps) => {
