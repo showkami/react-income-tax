@@ -1,18 +1,19 @@
 import {Tab, Tabs} from "@mui/material";
-import {useState} from "react";
+import React, {useState} from "react";
 import { SalaryIncomeInput } from "./IncomeInputPanel/SalaryIncomeInput";
 import {IncomeTypeId, incomeTypes} from "./IncomeTypes";
 
-type Income = number;
-type IncomeDict = {[key: IncomeTypeId]: Income}
+export type Income = number;
+export type IncomeDict = {[key: IncomeTypeId]: Income}
 
+type IncomeInputProps = {
+  incomeDict: IncomeDict,
+  setIncomeDict: React.Dispatch<React.SetStateAction<IncomeDict>>,
+}
 
-
-export const IncomeInput = () => {
+export const IncomeInput = ({incomeDict, setIncomeDict}: IncomeInputProps) => {
   const [selectedTab, setSelectedTab] = useState<string>("salary")
 
-  const initIncomeDict: IncomeDict = Object.fromEntries(incomeTypes.map((incomeType)=>{return [incomeType.id, 0]}));
-  const [incomeDict, setIncomeDict] = useState<IncomeDict>(initIncomeDict)
   const setSalaryIncome = (newValue: number) => {setIncomeDict((prev) => {return {...prev, salary: newValue}})};
 
   const IncomeInputPanel = (incomeType: string) => {

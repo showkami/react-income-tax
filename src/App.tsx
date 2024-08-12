@@ -1,9 +1,14 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Accordion, AccordionDetails, AccordionSummary, Button} from "@mui/material";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import {IncomeInput} from "./01_IncomeInput/Income";
+import {IncomeDict, IncomeInput} from "./01_IncomeInput/Income";
+import {incomeTypes} from "./01_IncomeInput/IncomeTypes";
 
 function App() {
+  // 所得計算用state
+  const initIncomeDict: IncomeDict = Object.fromEntries(incomeTypes.map((incomeType)=>{return [incomeType.id, 0]}));
+  const [incomeDict, setIncomeDict] = useState<IncomeDict>(initIncomeDict)
+
   return (
     <div>
 
@@ -16,7 +21,7 @@ function App() {
           所得の計算
         </AccordionSummary>
         <AccordionDetails>
-          <IncomeInput />
+          <IncomeInput incomeDict={incomeDict} setIncomeDict={setIncomeDict} />
         </AccordionDetails>
       </Accordion>
 
