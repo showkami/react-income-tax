@@ -3,6 +3,7 @@ import {Accordion, AccordionDetails, AccordionSummary, Button} from "@mui/materi
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {IncomeDict, IncomeInput} from "./01_IncomeInput/Income";
 import {incomeTypes} from "./01_IncomeInput/IncomeTypes";
+import {AggregationOfProfitLoss} from "./02_AggregationOfProfitLoss/AggregationOfProfitLoss";
 
 function App() {
   // 所得計算用state
@@ -27,10 +28,10 @@ function App() {
 
       <Accordion>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          損益通算
+          損益通算及び損失の繰越控除
         </AccordionSummary>
         <AccordionDetails>
-
+          <AggregationOfProfitLoss />
         </AccordionDetails>
       </Accordion>
 
