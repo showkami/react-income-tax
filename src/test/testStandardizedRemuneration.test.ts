@@ -1,4 +1,4 @@
-import { getStandardizedMonthlyRemuneration } from "../00_InputFromSalaryStatement/StandardizedMonthlyRemuneration/calc";
+import { getStandardizedMonthlyRemuneration } from "../00_InputFromSalaryStatement/getStandardizedMonthlyRemuneration";
 
 describe("getStandardizedMonthlyRemuneration", () => {
   test("給与が範囲内の場合、対応する標準化給与を返す", async () => {
@@ -14,7 +14,7 @@ describe("getStandardizedMonthlyRemuneration", () => {
   });
   const {
     getStandardizedMonthlyRemuneration,
-  } = require("../00_InputFromSalaryStatement/StandardizedMonthlyRemuneration/calc");
+  } = require("../00_InputFromSalaryStatement/StandardizedMonthlyRemuneration/getStandardizedMonthlyRemuneration");
   test("給与が最大値以上の場合、最後の行の標準化給与を返す", async () => {
     const salary = 700000;
     const result = await getStandardizedMonthlyRemuneration(salary);

@@ -177,4 +177,6 @@ export const getStandardizedMonthlyRemuneration = (salary: number) => {
       return range.standardizedMonthlyRemuneration;
     }
   }
+
+  throw new Error("標準報酬月額が見つかりませんでした");
 };

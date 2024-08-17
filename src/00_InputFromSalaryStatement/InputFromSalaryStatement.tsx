@@ -2,7 +2,7 @@ import { editableMoneyColumn, Grid } from "../component/Grid";
 import { useEffect, useState } from "react";
 import { CellValueChangedEvent, ColDef } from "ag-grid-community";
 import { sumArray } from "../utils";
-import { getStandardizedMonthlyRemuneration } from "./StandardizedMonthlyRemuneration/calc";
+import { getStandardizedMonthlyRemuneration } from "./getStandardizedMonthlyRemuneration";
 
 type MonthlySalaryWithhold = {
   month: string;
@@ -15,6 +15,30 @@ type MonthlySalaryWithhold = {
   residentTax: number; // 住民税
 };
 
+const generateRowDataFromEachColumn = (
+  months: string[],
+  totalPayrolls: number[],
+  standardizedPays: number[],
+  employeePensionInsurancePrems: number[],
+  healthInsurancePrems: number[],
+  careInsurancePrems: number[],
+  incomeTaxes: number[],
+  residentTaxes: number[],
+): MonthlySalaryWithhold[] => {
+  return months.map((month, idx) => {
+    return {
+      month: month,
+      totalPayroll: totalPayrolls[idx],
+      standardizedPay: standardizedPays[idx],
+      employeePensionInsurancePrem: employeePensionInsurancePrems[idx],
+      healthInsurancePrem: healthInsurancePrems[idx],
+      careInsurancePrem: careInsurancePrems[idx],
+      incomeTax: incomeTaxes[idx],
+      residentTax: residentTaxes[idx],
+    };
+  });
+};
+
 type InputFromSalaryStatementProps = {
   setSalaryRevenue: (salaryIncome: number) => void;
 };
@@ -22,7 +46,7 @@ type InputFromSalaryStatementProps = {
 export const InputFromSalaryStatement = (
   props: InputFromSalaryStatementProps,
 ) => {
-  const paidMonths = [
+  const payMonths = [
     "1月",
     "2月",
     "3月",
@@ -40,7 +64,7 @@ export const InputFromSalaryStatement = (
   ];
 
   // 各項目を格納する state を定義
-  const zeroinit = paidMonths.map((m) => 0);
+  const zeroinit = payMonths.map((m) => 0);
   const [totalPayrolls, setTotalPayrolls] = useState(zeroinit);
   const [standardizedPays, setStandardizedPays] = useState(zeroinit);
   const [employeePensionInsurancePrems, setEmployeePensionInsurancePrems] =
@@ -62,11 +86,8 @@ export const InputFromSalaryStatement = (
     props.setSalaryRevenue(sumArray(newTotalPayrolls));
 
     // 該当する月の標準報酬月額の更新 // TODO: 標準報酬月額か標準賞与額かどっちを取りに行くかの分岐が必要
-    const asyncGetStandardizedPay = async (newPayroll: number) =>
-      await getStandardizedMonthlyRemuneration(newPayroll);
-    asyncGetStandardizedPay(newPayroll).then((newStandardizedPay: number) => {
-      handleStandardizedPayChange(idx, newStandardizedPay);
-    });
+    const newStandardizedPay = getStandardizedMonthlyRemuneration(newPayroll);
+    handleStandardizedPayChange(idx, newStandardizedPay);
   };
 
   const handleStandardizedPayChange = (
@@ -107,23 +128,32 @@ export const InputFromSalaryStatement = (
       { field: "residentTax", headerName: "住民税", ...editableMoneyColumn },
     ],
   );
-  const [rowData, setRowData] = useState<MonthlySalaryWithhold[]>(
-    paidMonths.map((month, idx) => {
-      return {
-        month: month,
-        totalPayroll: totalPayrolls[idx],
-        standardizedPay: standardizedPays[idx],
-        employeePensionInsurancePrem: employeePensionInsurancePrems[idx],
-        healthInsurancePrem: healthInsurancePrems[idx],
-        careInsurancePrem: careInsurancePrems[idx],
-        incomeTax: incomeTaxes[idx],
-        residentTax: residentTaxes[idx],
-      } as MonthlySalaryWithhold;
-    }),
-  );
+
+  const [rowData, setRowData] = useState<MonthlySalaryWithhold[]>([]);
+  useEffect(() => {
+    const newRowData: MonthlySalaryWithhold[] = generateRowDataFromEachColumn(
+      payMonths,
+      totalPayrolls,
+      standardizedPays,
+      employeePensionInsurancePrems,
+      healthInsurancePrems,
+      careInsurancePrems,
+      incomeTaxes,
+      residentTaxes,
+    );
+    setRowData(newRowData);
+  }, [
+    totalPayrolls,
+    standardizedPays,
+    employeePensionInsurancePrems,
+    healthInsurancePrems,
+    careInsurancePrems,
+    incomeTaxes,
+    residentTaxes,
+  ]);
   const handleCellValueChanged = (evt: CellValueChangedEvent) => {
     const month: string = evt.data.month;
-    const idx: number = paidMonths.findIndex((elm) => elm === month);
+    const idx: number = payMonths.findIndex((elm) => elm === month);
     const columnId: string = evt.column.getColId();
     if (columnId === "totalPayroll") {
       handleTotalPayrollsChanged(idx, evt.newValue);

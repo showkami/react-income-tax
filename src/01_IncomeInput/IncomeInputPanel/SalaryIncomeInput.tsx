@@ -39,7 +39,6 @@ export const SalaryIncomeInput = (props: SalaryIncomeInputProps) => {
   // これは、給与明細からのインプット機能によって給与収入が変わる場合に発火する
   useEffect(() => {
     setRevenue(props.salaryRevenue);
-    console.log("revenue updates:", props.salaryRevenue);
   }, [props.salaryRevenue]);
 
   //
