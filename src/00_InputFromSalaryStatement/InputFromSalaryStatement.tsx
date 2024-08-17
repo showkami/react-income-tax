@@ -15,6 +15,23 @@ type MonthlySalaryWithhold = {
   residentTax: number; // 住民税
 };
 
+const payMonths = [
+  "1月",
+  "2月",
+  "3月",
+  "4月",
+  "5月",
+  "6月",
+  "7月",
+  "8月",
+  "9月",
+  "10月",
+  "11月",
+  "12月",
+  "賞与1",
+  "賞与2",
+];
+
 const generateRowDataFromEachColumn = (
   months: string[],
   totalPayrolls: number[],
@@ -46,23 +63,6 @@ type InputFromSalaryStatementProps = {
 export const InputFromSalaryStatement = (
   props: InputFromSalaryStatementProps,
 ) => {
-  const payMonths = [
-    "1月",
-    "2月",
-    "3月",
-    "4月",
-    "5月",
-    "6月",
-    "7月",
-    "8月",
-    "9月",
-    "10月",
-    "11月",
-    "12月",
-    "賞与1",
-    "賞与2",
-  ];
-
   // 各項目を格納する state を定義
   const zeroinit = payMonths.map((m) => 0);
   const [totalPayrolls, setTotalPayrolls] = useState(zeroinit);
@@ -100,34 +100,32 @@ export const InputFromSalaryStatement = (
   };
 
   // AGGrid定義
-  const [columnDefs, setColumnDefs] = useState<ColDef<MonthlySalaryWithhold>[]>(
-    [
-      { field: "month", sortable: false, width: 80 },
-      { field: "totalPayroll", headerName: "給与総額", ...editableMoneyColumn },
-      {
-        field: "standardizedPay",
-        headerName: "標準報酬月額",
-        ...editableMoneyColumn,
-      },
-      {
-        field: "employeePensionInsurancePrem",
-        headerName: "厚生年金保険料",
-        ...editableMoneyColumn,
-      },
-      {
-        field: "healthInsurancePrem",
-        headerName: "健康保険料",
-        ...editableMoneyColumn,
-      },
-      {
-        field: "careInsurancePrem",
-        headerName: "介護保険料",
-        ...editableMoneyColumn,
-      },
-      { field: "incomeTax", headerName: "所得税", ...editableMoneyColumn },
-      { field: "residentTax", headerName: "住民税", ...editableMoneyColumn },
-    ],
-  );
+  const [columnDefs] = useState<ColDef<MonthlySalaryWithhold>[]>([
+    { field: "month", sortable: false, width: 80 },
+    { field: "totalPayroll", headerName: "給与総額", ...editableMoneyColumn },
+    {
+      field: "standardizedPay",
+      headerName: "標準報酬月額",
+      ...editableMoneyColumn,
+    },
+    {
+      field: "employeePensionInsurancePrem",
+      headerName: "厚生年金保険料",
+      ...editableMoneyColumn,
+    },
+    {
+      field: "healthInsurancePrem",
+      headerName: "健康保険料",
+      ...editableMoneyColumn,
+    },
+    {
+      field: "careInsurancePrem",
+      headerName: "介護保険料",
+      ...editableMoneyColumn,
+    },
+    { field: "incomeTax", headerName: "所得税", ...editableMoneyColumn },
+    { field: "residentTax", headerName: "住民税", ...editableMoneyColumn },
+  ]);
 
   const [rowData, setRowData] = useState<MonthlySalaryWithhold[]>([]);
   useEffect(() => {
