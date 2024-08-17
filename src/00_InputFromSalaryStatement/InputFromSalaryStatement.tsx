@@ -2,6 +2,7 @@ import { editableMoneyColumn, Grid } from "../component/Grid";
 import { useEffect, useState } from "react";
 import { CellValueChangedEvent, ColDef } from "ag-grid-community";
 import { sumArray } from "../utils";
+import { getStandardizedMonthlyRemuneration } from "./StandardizedMonthlyRemuneration/calc";
 
 type MonthlySalaryWithhold = {
   month: string;
@@ -41,7 +42,7 @@ export const InputFromSalaryStatement = (
   // 各項目を格納する state を定義
   const zeroinit = paidMonths.map((m) => 0);
   const [totalPayrolls, setTotalPayrolls] = useState(zeroinit);
-  const [standardizedPay, setStandardizedPay] = useState(zeroinit);
+  const [standardizedPays, setStandardizedPays] = useState(zeroinit);
   const [employeePensionInsurancePrems, setEmployeePensionInsurancePrems] =
     useState<number[]>(zeroinit);
   const [healthInsurancePrems, setHealthInsurancePrems] =
@@ -60,8 +61,21 @@ export const InputFromSalaryStatement = (
     // 給与収入金額の更新
     props.setSalaryRevenue(sumArray(newTotalPayrolls));
 
-    // 該当する月の標準報酬月額の更新
-    handleStandardizedPayChange;
+    // 該当する月の標準報酬月額の更新 // TODO: 標準報酬月額か標準賞与額かどっちを取りに行くかの分岐が必要
+    const asyncGetStandardizedPay = async (newPayroll: number) =>
+      await getStandardizedMonthlyRemuneration(newPayroll);
+    asyncGetStandardizedPay(newPayroll).then((newStandardizedPay: number) => {
+      handleStandardizedPayChange(idx, newStandardizedPay);
+    });
+  };
+
+  const handleStandardizedPayChange = (
+    idx: number,
+    newStandardizedPay: number,
+  ) => {
+    const newStandardizedPays = [...standardizedPays];
+    newStandardizedPays[idx] = newStandardizedPay;
+    setStandardizedPays(newStandardizedPays);
   };
 
   // AGGrid定義
@@ -98,7 +112,7 @@ export const InputFromSalaryStatement = (
       return {
         month: month,
         totalPayroll: totalPayrolls[idx],
-        standardizedPay: standardizedPay[idx],
+        standardizedPay: standardizedPays[idx],
         employeePensionInsurancePrem: employeePensionInsurancePrems[idx],
         healthInsurancePrem: healthInsurancePrems[idx],
         careInsurancePrem: careInsurancePrems[idx],
@@ -114,9 +128,9 @@ export const InputFromSalaryStatement = (
     if (columnId === "totalPayroll") {
       handleTotalPayrollsChanged(idx, evt.newValue);
     } else if (columnId === "standardizedPay") {
-      const newStandardizedPay = [...standardizedPay];
+      const newStandardizedPay = [...standardizedPays];
       newStandardizedPay[idx] = evt.newValue;
-      setStandardizedPay(newStandardizedPay);
+      setStandardizedPays(newStandardizedPay);
     } else if (columnId === "employeePensionInsurancePrem") {
       const newEmployeePensionInsurancePrems = [
         ...employeePensionInsurancePrems,
