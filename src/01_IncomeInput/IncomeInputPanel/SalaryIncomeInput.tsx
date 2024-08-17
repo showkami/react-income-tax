@@ -41,14 +41,14 @@ export const SalaryIncomeInput = (props: SalaryIncomeInputProps) => {
     setRevenue(props.salaryRevenue);
   }, [props.salaryRevenue]);
 
-  //
+  const setSalaryIncome = props.setSalaryIncome;
   useEffect(() => {
     const salaryIncome = Math.max(
       0,
       revenue - calcSalaryIncomeDeduction(revenue),
     );
-    props.setSalaryIncome(salaryIncome);
-  }, [revenue]);
+    setSalaryIncome(salaryIncome);
+  }, [revenue, setSalaryIncome]);
 
   return (
     <>
