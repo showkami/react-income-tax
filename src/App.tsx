@@ -14,7 +14,7 @@ import {
   DeductionSourceDict,
 } from "./03_DeductionsFromIncome/DeductionsFromIncome";
 import { deductionTypes } from "./03_DeductionsFromIncome/DeductionTypes";
-import { InputFromSalaryStatement } from "./InputFromSalaryStatement";
+import { InputFromSalaryStatement } from "./00_InputFromSalaryStatement/InputFromSalaryStatement";
 
 function App() {
   // 所得計算用state
@@ -24,6 +24,7 @@ function App() {
     }),
   );
   const [incomeDict, setIncomeDict] = useState<IncomeDict>(initIncomeDict);
+  const [salaryRevenue, setSalaryRevenue] = useState<number>(0);
 
   // 所得控除の元となる数値state
   const initDeductionSourceDict: DeductionSourceDict = Object.fromEntries(
@@ -41,7 +42,7 @@ function App() {
           給与明細からインプット
         </AccordionSummary>
         <AccordionDetails>
-          <InputFromSalaryStatement />
+          <InputFromSalaryStatement setSalaryRevenue={setSalaryRevenue} />
         </AccordionDetails>
       </Accordion>
 
@@ -50,7 +51,11 @@ function App() {
           所得の計算
         </AccordionSummary>
         <AccordionDetails>
-          <IncomeInput incomeDict={incomeDict} setIncomeDict={setIncomeDict} />
+          <IncomeInput
+            incomeDict={incomeDict}
+            setIncomeDict={setIncomeDict}
+            salaryRevenue={salaryRevenue}
+          />
         </AccordionDetails>
       </Accordion>
 

@@ -2,6 +2,9 @@ import { AgGridReact, AgGridReactProps } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the Data Grid
 import "ag-grid-community/styles/ag-theme-quartz.css";
 
+import { formatCcy } from "../utils";
+import { ValueFormatterParams } from "ag-grid-community";
+
 type GridProps<TData> = {
   height: number;
 } & AgGridReactProps<TData>;
@@ -16,13 +19,10 @@ export const Grid = <TData extends any>(props: GridProps<TData>) => {
   );
 };
 
-export const currencyFormatter = (param: any) => {
-  return param.value !== undefined
-    ? param.value.toLocaleString("ja-JP", {
-        style: "currency",
-        currency: "JPY",
-      })
-    : "";
+export const currencyFormatter = (param: ValueFormatterParams) => {
+  return param.value === undefined || param.value === null
+    ? ""
+    : formatCcy(param.value);
 };
 
 export const editableMoneyColumn = {
@@ -31,5 +31,5 @@ export const editableMoneyColumn = {
   sortable: false,
   cellType: "number",
   type: "rightAligned",
-  aggFunc: "sum", // Grand Total Row用
+  // aggFunc: "sum", // Grand Total Row用
 };

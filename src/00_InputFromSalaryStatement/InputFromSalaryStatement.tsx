@@ -1,6 +1,7 @@
-import { editableMoneyColumn, Grid } from "./component/Grid";
+import { editableMoneyColumn, Grid } from "../component/Grid";
 import { useEffect, useState } from "react";
-import { CellValueChangedEvent, ColDef, ColGroupDef } from "ag-grid-community";
+import { CellValueChangedEvent, ColDef } from "ag-grid-community";
+import { sumArray } from "../utils";
 
 type MonthlySalaryWithhold = {
   month: string;
@@ -13,7 +14,9 @@ type MonthlySalaryWithhold = {
   residentTax: number; // 住民税
 };
 
-type InputFromSalaryStatementProps = {};
+type InputFromSalaryStatementProps = {
+  setSalaryRevenue: (salaryIncome: number) => void;
+};
 
 export const InputFromSalaryStatement = (
   props: InputFromSalaryStatementProps,
@@ -36,27 +39,24 @@ export const InputFromSalaryStatement = (
   ];
 
   // 各項目を格納する state を定義
-  const [totalPayrolls, setTotalPayrolls] = useState(paidMonths.map((m) => 0));
-  const [standardizedPay, setStandardizedPay] = useState(
-    paidMonths.map((m) => 0),
-  );
+  const zeroinit = paidMonths.map((m) => 0);
+  const [totalPayrolls, setTotalPayrolls] = useState(zeroinit);
+  const [standardizedPay, setStandardizedPay] = useState(zeroinit);
   const [employeePensionInsurancePrems, setEmployeePensionInsurancePrems] =
-    useState<number[]>(paidMonths.map((m) => 0));
-  const [healthInsurancePrems, setHealthInsurancePrems] = useState<number[]>(
-    paidMonths.map((m) => 0),
-  );
-  const [careInsurancePrems, setCareInsurancePrems] = useState<number[]>(
-    paidMonths.map((m) => 0),
-  );
-  const [incomeTaxes, setIncomeTaxes] = useState<number[]>(
-    paidMonths.map((m) => 0),
-  );
-  const [residentTaxes, setResidentTaxes] = useState<number[]>(
-    paidMonths.map((m) => 0),
-  );
+    useState<number[]>(zeroinit);
+  const [healthInsurancePrems, setHealthInsurancePrems] =
+    useState<number[]>(zeroinit);
+  const [careInsurancePrems, setCareInsurancePrems] =
+    useState<number[]>(zeroinit);
+  const [incomeTaxes, setIncomeTaxes] = useState<number[]>(zeroinit);
+  const [residentTaxes, setResidentTaxes] = useState<number[]>(zeroinit);
 
   // 各項目が変化したときの effect
+  useEffect(() => {
+    props.setSalaryRevenue(sumArray(totalPayrolls));
+  }, [totalPayrolls]);
 
+  // AGGrid定義
   const [columnDefs, setColumnDefs] = useState<ColDef<MonthlySalaryWithhold>[]>(
     [
       { field: "month", sortable: false, width: 80 },
@@ -85,7 +85,6 @@ export const InputFromSalaryStatement = (
       { field: "residentTax", headerName: "住民税", ...editableMoneyColumn },
     ],
   );
-
   const [rowData, setRowData] = useState<MonthlySalaryWithhold[]>(
     paidMonths.map((month, idx) => {
       return {
@@ -100,7 +99,6 @@ export const InputFromSalaryStatement = (
       } as MonthlySalaryWithhold;
     }),
   );
-
   const handleCellValueChanged = (evt: CellValueChangedEvent) => {
     const month: string = evt.data.month;
     const idx: number = paidMonths.findIndex((elm) => elm === month);
@@ -144,8 +142,8 @@ export const InputFromSalaryStatement = (
         height={600}
         columnDefs={columnDefs}
         rowData={rowData}
-        // onCellValueChanged={handleCellValueChanged}
-        grandTotalRow={"bottom"}
+        onCellValueChanged={handleCellValueChanged}
+        // grandTotalRow={"bottom"} // enterprise限定機能らしい。。。
       />
     </>
   );
