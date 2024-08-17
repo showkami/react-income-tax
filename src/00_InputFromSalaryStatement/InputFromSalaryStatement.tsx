@@ -51,10 +51,18 @@ export const InputFromSalaryStatement = (
   const [incomeTaxes, setIncomeTaxes] = useState<number[]>(zeroinit);
   const [residentTaxes, setResidentTaxes] = useState<number[]>(zeroinit);
 
-  // 各項目が変化したときの effect
-  useEffect(() => {
-    props.setSalaryRevenue(sumArray(totalPayrolls));
-  }, [totalPayrolls]);
+  const handleTotalPayrollsChanged = (idx: number, newPayroll: number) => {
+    // totalPayrollsの更新
+    const newTotalPayrolls = [...totalPayrolls];
+    newTotalPayrolls[idx] = newPayroll;
+    setTotalPayrolls(newTotalPayrolls);
+
+    // 給与収入金額の更新
+    props.setSalaryRevenue(sumArray(newTotalPayrolls));
+
+    // 該当する月の標準報酬月額の更新
+    handleStandardizedPayChange;
+  };
 
   // AGGrid定義
   const [columnDefs, setColumnDefs] = useState<ColDef<MonthlySalaryWithhold>[]>(
@@ -104,9 +112,7 @@ export const InputFromSalaryStatement = (
     const idx: number = paidMonths.findIndex((elm) => elm === month);
     const columnId: string = evt.column.getColId();
     if (columnId === "totalPayroll") {
-      const newTotalPayrolls = [...totalPayrolls];
-      newTotalPayrolls[idx] = evt.newValue;
-      setTotalPayrolls(newTotalPayrolls);
+      handleTotalPayrollsChanged(idx, evt.newValue);
     } else if (columnId === "standardizedPay") {
       const newStandardizedPay = [...standardizedPay];
       newStandardizedPay[idx] = evt.newValue;

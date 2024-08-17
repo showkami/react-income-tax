@@ -1,7 +1,6 @@
 import fs from "fs";
 import { parse } from "csv-parse";
-import { Error } from "@mui/icons-material";
-import { range } from "../../../../../../Library/Python/3.9/lib/python/site-packages/nbclassic/static/components/codemirror/src/util/dom";
+import path from "path";
 
 interface Range {
   min: number | null;
@@ -11,7 +10,7 @@ interface Range {
 
 // CSVファイルを読み込み、パースしてSalaryRangeの配列を返します
 function loadRange(): Promise<Range[]> {
-  const csvFilePath = "./master.csv";
+  const csvFilePath = path.resolve(__dirname, "master.csv");
   return new Promise((resolve, reject) => {
     const salaryRanges: Range[] = [];
 
@@ -22,7 +21,7 @@ function loadRange(): Promise<Range[]> {
           trim: true,
         }),
       )
-      .on("data", (row) => {
+      .on("data", (row: any) => {
         salaryRanges.push({
           min: row.min ? parseFloat(row.min) : null,
           max: row.max ? parseFloat(row.max) : null,
@@ -41,7 +40,7 @@ function loadRange(): Promise<Range[]> {
 }
 
 // 月額給与に対してStandardizedMonthlyRemunerationを返します
-async function getStandardizedMonthlyRemuneration(
+export async function getStandardizedMonthlyRemuneration(
   salary: number,
 ): Promise<number> {
   const salaryRanges = await loadRange();
