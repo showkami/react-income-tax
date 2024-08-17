@@ -1,7 +1,8 @@
 import {useEffect, useState} from "react";
-import {Grid, TextField} from "@mui/material";
+import {TextField} from "@mui/material";
 import { NumericForm } from "../../component/NumericForm";
 import {MoneyDisplay} from "../../component/MoneyDisplay";
+import {currencyFormatter, Grid} from "../../component/Grid";
 
 /**
  * 給与所得控除の金額の計算
@@ -36,23 +37,30 @@ export const SalaryIncomeInput = (props: SalaryIncomeInputProps) => {
   useEffect(() => {
     const salaryIncome = Math.max(0, revenue - calcSalaryIncomeDeduction(revenue));
     props.setSalaryIncome(salaryIncome);
-  }, [revenue, props]);
+  }, [revenue]);
+
+  const [rowData, setRowData] = useState([
+    {rowTitle: "給与収入", amount: revenue, editable: true},
+    {rowTitle: "給与所得控除", amount: calcSalaryIncomeDeduction(revenue)},
+    {rowTitle: "給与所得", amount: revenue - calcSalaryIncomeDeduction(revenue)},
+  ])
+
+  const [columnDefs, setColumnDefs] = useState([
+    {field: "rowTitle", label: "row"},
+    {field: "amount", valueFormatter: currencyFormatter, cellDataType: "number", type: "rightAligned"},
+  ])
 
   return (
     <>
-      <Grid container spacing={2}>
-        <NumericForm
-          label={"収入金額"}
-          value={revenue}
-          setValue={setRevenue}
-        />
-      </Grid>
-      <Grid container>
-        給与所得控除: <MoneyDisplay amount={calcSalaryIncomeDeduction(revenue)} />
-      </Grid>
-      <Grid container>
-        給与収入: <MoneyDisplay amount={props.salaryIncome} />
-      </Grid>
+      <NumericForm
+        label={"収入金額"}
+        value={revenue}
+        setValue={setRevenue}
+      />
+      <br />
+      給与所得控除: <MoneyDisplay amount={calcSalaryIncomeDeduction(revenue)} />
+      <br />
+      給与収入: <MoneyDisplay amount={props.salaryIncome} />
     </>
   )
 }
