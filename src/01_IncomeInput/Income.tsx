@@ -28,7 +28,7 @@ export const IncomeInput = (props: IncomeInputProps) => {
           <SalaryIncomeInput
             salaryIncome={props.incomeDict.salary}
             setSalaryIncome={setSalaryIncome}
-            salaryRevenue={props.salaryRevenue}
+            salaryRevenueFromSalaryStatement={props.salaryRevenue}
           />
         );
       default:

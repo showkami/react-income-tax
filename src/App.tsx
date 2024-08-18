@@ -5,11 +5,12 @@ import { incomeTypes } from "./01_IncomeInput/IncomeTypes";
 import { AggregationOfProfitLoss } from "./02_AggregationOfProfitLoss/AggregationOfProfitLoss";
 import {
   DeductionsFromIncome,
-  DeductionSourceDict,
+  DeductionsDict,
 } from "./03_DeductionsFromIncome/DeductionsFromIncome";
 import { deductionTypes } from "./03_DeductionsFromIncome/DeductionTypes";
 import { InputFromSalaryStatement } from "./00_InputFromSalaryStatement/InputFromSalaryStatement";
 import { Accordion } from "./component/Accordion";
+import { formatCcy, sumArray } from "./utils";
 
 function App() {
   // 所得計算用state
@@ -22,13 +23,16 @@ function App() {
   const [salaryRevenue, setSalaryRevenue] = useState<number>(0);
 
   // 所得控除の元となる数値state
-  const initDeductionSourceDict: DeductionSourceDict = Object.fromEntries(
+  const initDeductionsDict: DeductionsDict = Object.fromEntries(
     deductionTypes.map((deductionType) => {
-      return [deductionType.id, 0];
+      return [deductionType.id, { forIncomeTax: 0, forResidentTax: 0 }];
     }),
   );
-  const [deductionSourceDict, setDeductionSourceDict] =
-    useState<DeductionSourceDict>(initDeductionSourceDict);
+  const [deductionsDict, setDeductionsDict] =
+    useState<DeductionsDict>(initDeductionsDict);
+
+  // 表示ように各種合計金額を計算
+  const income: number = sumArray(Object.values(incomeDict));
 
   return (
     <Box width={"100%"}>
@@ -37,11 +41,11 @@ function App() {
         content={
           <InputFromSalaryStatement setSalaryRevenue={setSalaryRevenue} />
         }
-        defaultExpanded={true}
+        defaultExpanded={false}
       />
 
       <Accordion
-        title={"所得の計算"}
+        title={`所得の計算 (合計所得: ${formatCcy(income)})`}
         content={
           <IncomeInput
             incomeDict={incomeDict}
@@ -57,13 +61,14 @@ function App() {
       />
 
       <Accordion
-        title={"課税所得の計算(所得控除の反映)"}
+        title={`課税所得の計算(所得控除の反映)`}
         content={
           <DeductionsFromIncome
-            deductionSourceDict={deductionSourceDict}
-            setDeductionSourceDict={setDeductionSourceDict}
+            deductionsDict={deductionsDict}
+            setDeductionDict={setDeductionsDict}
           />
         }
+        defaultExpanded={true}
       />
     </Box>
   );

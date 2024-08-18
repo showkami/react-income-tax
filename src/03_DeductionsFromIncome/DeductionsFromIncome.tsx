@@ -1,16 +1,25 @@
 import React, { useState } from "react";
 import { Tab, Tabs } from "@mui/material";
 import { DeductionTypeId, deductionTypes } from "./DeductionTypes";
-import { CurrencyForm } from "../component/CurrencyForm";
+import { MedicalDeductionPanel } from "./DeductionInputPanel/MedicalDeductionPanel";
+import { SocialInsurancePremiumDeductionPanel } from "./DeductionInputPanel/SocialInsurancePremiumDeductionPanel";
+import { LifeInsurancePremiumDeductionPanel } from "./DeductionInputPanel/LifeInsurancePremiumDeductionPanel";
 
-export type DeductionSource = number; // 所得控除そのものではなく、所得控除の計算の元となる数字 (例えば支払った医療費の全額)
-export type DeductionSourceDict = { [key: DeductionTypeId]: DeductionSource };
+/**
+ * ある所得控除項目の、所得税用の所得控除・住民税用の所得控除
+ */
+export type Deduction = {
+  forIncomeTax: number; // 所得税計算上の所得控除
+  forResidentTax: number; // 住民税計算上の所得控除
+};
+/**
+ * 各所得控除の情報を持ったdict
+ */
+export type DeductionsDict = { [key: DeductionTypeId]: Deduction };
 
 type DeductionsFromIncomeProps = {
-  deductionSourceDict: DeductionSourceDict;
-  setDeductionSourceDict: React.Dispatch<
-    React.SetStateAction<DeductionSourceDict>
-  >;
+  deductionsDict: DeductionsDict;
+  setDeductionDict: React.Dispatch<React.SetStateAction<DeductionsDict>>;
 };
 
 export const DeductionsFromIncome = (props: DeductionsFromIncomeProps) => {
@@ -18,18 +27,48 @@ export const DeductionsFromIncome = (props: DeductionsFromIncomeProps) => {
     "socialInsurancePremium",
   );
 
+  const setMedicalExpensesDeduction = (newDeduction: Deduction) => {
+    props.setDeductionDict((prev) => {
+      return { ...prev, medicalExpenses: newDeduction };
+    });
+  };
+  const setSocialInsurancePremiumDeduction = (newDeduction: Deduction) => {
+    props.setDeductionDict((prev) => {
+      return { ...prev, socialInsurancePremium: newDeduction };
+    });
+  };
+  const setLifeInsurancePremiumDeduction = (newDeduction: Deduction) => {
+    props.setDeductionDict((prev) => {
+      return { ...prev, lifeInsurancePremium: newDeduction };
+    });
+  };
+
   const DeductionInputPanel = (deductionTypeId: DeductionTypeId) => {
-    return (
-      <CurrencyForm
-        value={props.deductionSourceDict[deductionTypeId]}
-        onChangeValue={(newValue) => {
-          props.setDeductionSourceDict((prev) => {
-            prev[deductionTypeId] = newValue;
-            return prev;
-          });
-        }}
-      />
-    );
+    switch (deductionTypeId) {
+      case "medicalExpenses":
+        return (
+          <MedicalDeductionPanel
+            deduction={props.deductionsDict.medicalExpenses}
+            setDeduction={setMedicalExpensesDeduction}
+          />
+        );
+      case "socialInsurancePremium":
+        return (
+          <SocialInsurancePremiumDeductionPanel
+            deduction={props.deductionsDict.socialInsurances}
+            setDeduction={setSocialInsurancePremiumDeduction}
+          />
+        );
+      case "lifeInsurancePremium":
+        return (
+          <LifeInsurancePremiumDeductionPanel
+            deduction={props.deductionsDict.socialInsurances}
+            setDeduction={setLifeInsurancePremiumDeduction}
+          />
+        );
+      default:
+        return <>Not Implemented...</>;
+    }
   };
   return (
     <>
