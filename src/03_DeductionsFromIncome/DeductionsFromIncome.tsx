@@ -38,10 +38,8 @@ export const DeductionsFromIncome = (props: DeductionsFromIncomeProps) => {
       case "medicalExpenses":
         return (
           <MedicationDeductionPanel
-            medicationExpensesDeduction={
-              props.deductionsDict.medicationExpenses
-            }
-            setMedicationExpensesDeduction={setMedicationExpensesDeduction}
+            deduction={props.deductionsDict.medicalExpenses}
+            setDeduction={setMedicationExpensesDeduction}
           />
         );
       default:

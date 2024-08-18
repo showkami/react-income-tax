@@ -4,10 +4,8 @@ import { useEffect, useState } from "react";
 import { formatCcy } from "../../utils";
 
 type MedicationDeductionPanelProps = {
-  medicationExpensesDeduction: Deduction;
-  setMedicationExpensesDeduction: (
-    medicationExpenseDeduction: Deduction,
-  ) => void;
+  deduction: Deduction;
+  setDeduction: (medicationExpenseDeduction: Deduction) => void;
 };
 
 // TODO: 医療費控除の特例＝セルフメディケーション税制に対応する
@@ -25,13 +23,14 @@ export const MedicationDeductionPanel = (
     // NOTE: 総所得金額等が200万円未満の場合は、-100000 ではなく総所得金額等の5%を引く
   );
   useEffect(() => {
-    props.setMedicationExpensesDeduction({
+    props.setDeduction({
       forIncomeTax: medicationExpenseDeductionAmount,
       forResidentTax: medicationExpenseDeductionAmount,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [medicationExpenseDeductionAmount]);
 
+  console.log(props.deduction);
   return (
     <>
       支払った医療費の額:
@@ -47,9 +46,8 @@ export const MedicationDeductionPanel = (
       />
       <br />
       {/*TODO: ここの見せ方・・・どうにかならないか・・・*/}
-      医療費控除の金額: (所得税){" "}
-      {formatCcy(props.medicationExpensesDeduction.forIncomeTax)}
-      (住民税) {formatCcy(props.medicationExpensesDeduction.forResidentTax)}
+      医療費控除の金額: (所得税) {formatCcy(props.deduction.forIncomeTax)}
+      (住民税) {formatCcy(props.deduction.forResidentTax)}
     </>
   );
 };
