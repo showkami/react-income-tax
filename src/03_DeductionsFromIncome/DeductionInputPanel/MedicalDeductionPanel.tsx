@@ -3,46 +3,40 @@ import { Deduction } from "../DeductionsFromIncome";
 import { useEffect, useState } from "react";
 import { formatCcy } from "../../utils";
 
-type MedicationDeductionPanelProps = {
+type MedicalDeductionPanelProps = {
   deduction: Deduction;
-  setDeduction: (medicationExpenseDeduction: Deduction) => void;
+  setDeduction: (medicalExpenseDeduction: Deduction) => void;
 };
 
 // TODO: 医療費控除の特例＝セルフメディケーション税制に対応する
 
-export const MedicationDeductionPanel = (
-  props: MedicationDeductionPanelProps,
-) => {
-  const [paidMedicationExpense, setPaidMedicationExpense] = useState<number>(0);
-  const [compensationFromInsurance, setCompensationFromInsurance] =
-    useState<number>(0);
+export const MedicalDeductionPanel = (props: MedicalDeductionPanelProps) => {
+  const [paidAmount, setPaidAmount] = useState<number>(0);
+  const [compensationAmount, setCompensationAmount] = useState<number>(0); // 保険金等からの補填
 
-  const medicationExpenseDeductionAmount: number = Math.max(
+  const deductionAmount: number = Math.max(
     0,
-    paidMedicationExpense - compensationFromInsurance - 100_000,
+    paidAmount - compensationAmount - 100_000,
     // NOTE: 総所得金額等が200万円未満の場合は、-100000 ではなく総所得金額等の5%を引く
   );
   useEffect(() => {
     props.setDeduction({
-      forIncomeTax: medicationExpenseDeductionAmount,
-      forResidentTax: medicationExpenseDeductionAmount,
+      forIncomeTax: deductionAmount,
+      forResidentTax: deductionAmount,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [medicationExpenseDeductionAmount]);
+  }, [deductionAmount]);
 
   console.log(props.deduction);
   return (
     <>
       支払った医療費の額:
-      <CurrencyForm
-        value={paidMedicationExpense}
-        onChangeValue={setPaidMedicationExpense}
-      />
+      <CurrencyForm value={paidAmount} onChangeValue={setPaidAmount} />
       <br />
       保険金等で補填される金額:
       <CurrencyForm
-        value={compensationFromInsurance}
-        onChangeValue={setCompensationFromInsurance}
+        value={compensationAmount}
+        onChangeValue={setCompensationAmount}
       />
       <br />
       {/*TODO: ここの見せ方・・・どうにかならないか・・・*/}

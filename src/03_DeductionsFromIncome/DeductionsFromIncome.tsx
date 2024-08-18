@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Tab, Tabs } from "@mui/material";
 import { DeductionTypeId, deductionTypes } from "./DeductionTypes";
 import { CurrencyForm } from "../component/CurrencyForm";
-import { MedicationDeductionPanel } from "./DeductionInputPanel/MedicationDeductionPanel";
+import { MedicalDeductionPanel } from "./DeductionInputPanel/MedicalDeductionPanel";
 
 /**
  * ある所得控除項目の、所得税用の所得控除・住民税用の所得控除
@@ -26,10 +26,9 @@ export const DeductionsFromIncome = (props: DeductionsFromIncomeProps) => {
     "socialInsurancePremium",
   );
 
-  const setMedicationExpensesDeduction = (newDeduction: Deduction) => {
-    console.log("setting medicationExpensesDeduction.. ", newDeduction);
+  const setMedicalExpensesDeduction = (newDeduction: Deduction) => {
     props.setDeductionDict((prev) => {
-      return { ...prev, medicationExpenses: newDeduction };
+      return { ...prev, medicalExpenses: newDeduction };
     });
   };
 
@@ -37,9 +36,9 @@ export const DeductionsFromIncome = (props: DeductionsFromIncomeProps) => {
     switch (deductionTypeId) {
       case "medicalExpenses":
         return (
-          <MedicationDeductionPanel
+          <MedicalDeductionPanel
             deduction={props.deductionsDict.medicalExpenses}
-            setDeduction={setMedicationExpensesDeduction}
+            setDeduction={setMedicalExpensesDeduction}
           />
         );
       default:
