@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box } from "@mui/material";
+import { Stack } from "@mui/material";
 import { IncomeDict, IncomeInput } from "./01_IncomeInput/Income";
 import { incomeTypes } from "./01_IncomeInput/IncomeTypes";
 import { AggregationOfProfitLoss } from "./02_AggregationOfProfitLoss/AggregationOfProfitLoss";
@@ -10,7 +10,8 @@ import {
 import { deductionTypes } from "./03_DeductionsFromIncome/DeductionTypes";
 import { InputFromSalaryStatement } from "./00_InputFromSalaryStatement/InputFromSalaryStatement";
 import { Accordion } from "./component/Accordion";
-import { formatCcy, sumArray } from "./utils";
+import { TaxCredit } from "./04_TaxCredit/TaxCredit";
+import { TaxStatement } from "./10_TaxStatement/TaxStatement";
 
 function App() {
   // 所得計算用state
@@ -31,11 +32,8 @@ function App() {
   const [deductionsDict, setDeductionsDict] =
     useState<DeductionsDict>(initDeductionsDict);
 
-  // 表示ように各種合計金額を計算
-  const income: number = sumArray(Object.values(incomeDict));
-
   return (
-    <Box width={"100%"}>
+    <Stack width={"100%"} spacing={1} padding={1}>
       <Accordion
         title={"給与明細からインプット"}
         content={
@@ -45,7 +43,7 @@ function App() {
       />
 
       <Accordion
-        title={`所得の計算 (合計所得: ${formatCcy(income)})`}
+        title={`所得の計算`}
         content={
           <IncomeInput
             incomeDict={incomeDict}
@@ -53,6 +51,7 @@ function App() {
             salaryRevenue={salaryRevenue}
           />
         }
+        defaultExpanded={true}
       />
 
       <Accordion
@@ -61,7 +60,7 @@ function App() {
       />
 
       <Accordion
-        title={`課税所得の計算(所得控除の反映)`}
+        title={`所得控除`}
         content={
           <DeductionsFromIncome
             deductionsDict={deductionsDict}
@@ -70,7 +69,20 @@ function App() {
         }
         defaultExpanded={true}
       />
-    </Box>
+
+      <Accordion title={"税額控除"} content={<TaxCredit />} />
+
+      <Accordion
+        title={"税額計算"}
+        content={
+          <TaxStatement
+            incomeDict={incomeDict}
+            deductionsDict={deductionsDict}
+          />
+        }
+        defaultExpanded={true}
+      />
+    </Stack>
   );
 }
 
