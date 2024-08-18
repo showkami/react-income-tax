@@ -91,15 +91,17 @@ export const TaxStatement = (props: TaxStatementProps) => {
 
   // AGGrid用
   const [columnDefs] = useState<ColDef<StatementRow>[]>([
-    { field: "item", sortable: false },
+    { field: "item", sortable: false, width: 150, pinned: true },
     {
       field: "incomeTaxCalc",
       headerName: "所得税の計算",
+      width: 150,
       ...uneditableMoneyColumn,
     },
     {
       field: "residentTaxCalc",
       headerName: "住民税の計算",
+      width: 150,
       ...uneditableMoneyColumn,
     },
   ]);
@@ -126,7 +128,7 @@ export const TaxStatement = (props: TaxStatementProps) => {
       },
       // MEMO: 他の課税所得金額 (「課税短期譲渡所得金額」とか) も入れる
       {
-        item: "税率適用",
+        item: "税額 (税額控除前)",
         incomeTaxCalc: incomeTaxBeforeCredit,
         residentTaxCalc: residentTaxBeforeCredit,
       },
@@ -136,7 +138,7 @@ export const TaxStatement = (props: TaxStatementProps) => {
         residentTaxCalc: -taxCreditForResidentTax,
       },
       {
-        item: "税額控除後の税金",
+        item: "税額",
         incomeTaxCalc: incomeTax,
         residentTaxCalc: residentTax,
       },
