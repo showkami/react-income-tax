@@ -101,30 +101,49 @@ export const InputFromSalaryStatement = (
 
   // AGGrid定義
   const [columnDefs] = useState<ColDef<MonthlySalaryWithhold>[]>([
-    { field: "month", sortable: false, width: 80 },
-    { field: "totalPayroll", headerName: "給与総額", ...editableMoneyColumn },
+    { field: "month", sortable: false, width: 80, pinned: true },
+    {
+      field: "totalPayroll",
+      headerName: "給与総額",
+      width: 150,
+      ...editableMoneyColumn,
+    },
     {
       field: "standardizedPay",
       headerName: "標準報酬月額",
+      width: 150,
       ...editableMoneyColumn,
     },
     {
       field: "employeePensionInsurancePrem",
       headerName: "厚生年金保険料",
+      width: 150,
       ...editableMoneyColumn,
     },
     {
       field: "healthInsurancePrem",
       headerName: "健康保険料",
+      width: 150,
       ...editableMoneyColumn,
     },
     {
       field: "careInsurancePrem",
       headerName: "介護保険料",
+      width: 150,
       ...editableMoneyColumn,
     },
-    { field: "incomeTax", headerName: "所得税", ...editableMoneyColumn },
-    { field: "residentTax", headerName: "住民税", ...editableMoneyColumn },
+    {
+      field: "incomeTax",
+      headerName: "所得税",
+      width: 150,
+      ...editableMoneyColumn,
+    },
+    {
+      field: "residentTax",
+      headerName: "住民税",
+      width: 150,
+      ...editableMoneyColumn,
+    },
   ]);
 
   const [rowData, setRowData] = useState<MonthlySalaryWithhold[]>([]);
