@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box } from "@mui/material";
+import { Stack } from "@mui/material";
 import { IncomeDict, IncomeInput } from "./01_IncomeInput/Income";
 import { incomeTypes } from "./01_IncomeInput/IncomeTypes";
 import { AggregationOfProfitLoss } from "./02_AggregationOfProfitLoss/AggregationOfProfitLoss";
@@ -33,7 +33,7 @@ function App() {
     useState<DeductionsDict>(initDeductionsDict);
 
   return (
-    <Box width={"100%"}>
+    <Stack width={"100%"} spacing={1} padding={1}>
       <Accordion
         title={"給与明細からインプット"}
         content={
@@ -51,6 +51,7 @@ function App() {
             salaryRevenue={salaryRevenue}
           />
         }
+        defaultExpanded={true}
       />
 
       <Accordion
@@ -59,7 +60,7 @@ function App() {
       />
 
       <Accordion
-        title={`課税所得の計算(所得控除の反映)`}
+        title={`所得控除`}
         content={
           <DeductionsFromIncome
             deductionsDict={deductionsDict}
@@ -81,7 +82,7 @@ function App() {
         }
         defaultExpanded={true}
       />
-    </Box>
+    </Stack>
   );
 }
 

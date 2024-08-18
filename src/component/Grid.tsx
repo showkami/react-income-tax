@@ -25,11 +25,15 @@ export const currencyFormatter = (param: ValueFormatterParams) => {
     : formatCcy(param.value);
 };
 
-export const editableMoneyColumn = {
+export const uneditableMoneyColumn = {
   valueFormatter: currencyFormatter,
-  editable: true,
   sortable: false,
   cellType: "number",
   type: "rightAligned",
   // aggFunc: "sum", // Grand Total Row用
+};
+
+export const editableMoneyColumn = {
+  editable: true,
+  ...uneditableMoneyColumn,
 };
