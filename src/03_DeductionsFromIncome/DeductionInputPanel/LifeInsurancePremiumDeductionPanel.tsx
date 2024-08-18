@@ -1,5 +1,5 @@
 import { Deduction } from "../DeductionsFromIncome";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { CurrencyForm } from "../../component/CurrencyForm";
 
 type LifeInsurancePremiumDeductionPanelProps = {
