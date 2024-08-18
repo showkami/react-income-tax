@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Tab, Tabs } from "@mui/material";
 import { DeductionTypeId, deductionTypes } from "./DeductionTypes";
-import { CurrencyForm } from "../component/CurrencyForm";
 import { MedicalDeductionPanel } from "./DeductionInputPanel/MedicalDeductionPanel";
 import { SocialInsurancePremiumDeductionPanel } from "./DeductionInputPanel/SocialInsurancePremiumDeductionPanel";
 import { LifeInsurancePremiumDeductionPanel } from "./DeductionInputPanel/LifeInsurancePremiumDeductionPanel";
