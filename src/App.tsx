@@ -11,6 +11,8 @@ import { deductionTypes } from "./03_DeductionsFromIncome/DeductionTypes";
 import { InputFromSalaryStatement } from "./00_InputFromSalaryStatement/InputFromSalaryStatement";
 import { Accordion } from "./component/Accordion";
 import { formatCcy, sumArray } from "./utils";
+import { TaxCredit } from "./04_TaxCredit/TaxCredit";
+import { TaxStatement } from "./10_TaxStatement/TaxStatement";
 
 function App() {
   // 所得計算用state
@@ -66,6 +68,19 @@ function App() {
           <DeductionsFromIncome
             deductionsDict={deductionsDict}
             setDeductionDict={setDeductionsDict}
+          />
+        }
+        defaultExpanded={true}
+      />
+
+      <Accordion title={"税額控除"} content={<TaxCredit />} />
+
+      <Accordion
+        title={"税額計算"}
+        content={
+          <TaxStatement
+            incomeDict={incomeDict}
+            deductionsDict={deductionsDict}
           />
         }
         defaultExpanded={true}
