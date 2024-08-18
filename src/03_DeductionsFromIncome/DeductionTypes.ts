@@ -6,7 +6,7 @@ type DeductionType = {
 export const deductionTypes: DeductionType[] = [
   { nameJp: "雑損", id: "casualty" },
   { nameJp: "医療費", id: "medicalExpenses" },
-  { nameJp: "社会保険料", id: "" },
+  { nameJp: "社会保険料", id: "socialInsurancePremium" },
   { nameJp: "小規模企業共済等掛金", id: "mutualAidPremium" },
   { nameJp: "生命保険料", id: "lifeInsurancePremium" },
   { nameJp: "地震保険料", id: "earthquakeInsurancePremium" },
