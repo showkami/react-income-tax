@@ -29,26 +29,28 @@ const calcSalaryIncomeDeduction = (revenue: number): number => {
 type SalaryIncomeInputProps = {
   salaryIncome: number;
   setSalaryIncome: (newValue: number) => void;
-  salaryRevenue: number;
+  salaryRevenueFromSalaryStatement: number;
 };
 
 export const SalaryIncomeInput = (props: SalaryIncomeInputProps) => {
-  const [revenue, setRevenue] = useState<number>(props.salaryRevenue); // 収入金額
+  const revenueFromSalaryStatement = props.salaryRevenueFromSalaryStatement;
+  const [revenue, setRevenue] = useState<number>(revenueFromSalaryStatement); // 収入金額
 
   // salaryRevenueが変わった時は、 revenue を書き換える
   // これは、給与明細からのインプット機能によって給与収入が変わる場合に発火する
   useEffect(() => {
-    setRevenue(props.salaryRevenue);
-  }, [props.salaryRevenue]);
+    setRevenue(revenueFromSalaryStatement);
+  }, [revenueFromSalaryStatement]);
 
-  const setSalaryIncome = props.setSalaryIncome;
+  // 入力されている給与収入金額が変わったら、それに基づいて給与所得金額を設定
   useEffect(() => {
-    const salaryIncome = Math.max(
+    const newSalaryIncome = Math.max(
       0,
       revenue - calcSalaryIncomeDeduction(revenue),
     );
-    setSalaryIncome(salaryIncome);
-  }, [revenue, setSalaryIncome]);
+    props.setSalaryIncome(newSalaryIncome);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [revenue]);
 
   return (
     <>
