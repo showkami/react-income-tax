@@ -151,6 +151,8 @@ export const TaxStatement = (props: TaxStatementProps) => {
     residentTaxBeforeCredit,
     taxCreditForIncomeTax,
     taxCreditForResidentTax,
+    incomeTax,
+    residentTax,
   ]);
 
   return (
