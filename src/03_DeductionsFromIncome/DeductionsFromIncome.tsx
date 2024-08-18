@@ -26,7 +26,8 @@ export const DeductionsFromIncome = (props: DeductionsFromIncomeProps) => {
     "socialInsurancePremium",
   );
 
-  const setMedicationDeductionIncome = (newDeduction: Deduction) => {
+  const setMedicationExpensesDeduction = (newDeduction: Deduction) => {
+    console.log("setting medicationExpensesDeduction.. ", newDeduction);
     props.setDeductionDict((prev) => {
       return { ...prev, medicationExpenses: newDeduction };
     });
@@ -37,8 +38,10 @@ export const DeductionsFromIncome = (props: DeductionsFromIncomeProps) => {
       case "medicalExpenses":
         return (
           <MedicationDeductionPanel
-            medicationExpensesDeduction={props.deductionsDict.medicalExpenses}
-            setMedicationExpenses={setMedicationDeductionIncome}
+            medicationExpensesDeduction={
+              props.deductionsDict.medicationExpenses
+            }
+            setMedicationExpensesDeduction={setMedicationExpensesDeduction}
           />
         );
       default:
