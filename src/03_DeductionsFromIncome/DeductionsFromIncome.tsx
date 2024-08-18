@@ -4,6 +4,7 @@ import { DeductionTypeId, deductionTypes } from "./DeductionTypes";
 import { CurrencyForm } from "../component/CurrencyForm";
 import { MedicalDeductionPanel } from "./DeductionInputPanel/MedicalDeductionPanel";
 import { SocialInsurancePremiumDeductionPanel } from "./DeductionInputPanel/SocialInsurancePremiumDeductionPanel";
+import { LifeInsurancePremiumDeductionPanel } from "./DeductionInputPanel/LifeInsurancePremiumDeductionPanel";
 
 /**
  * ある所得控除項目の、所得税用の所得控除・住民税用の所得控除
@@ -37,6 +38,11 @@ export const DeductionsFromIncome = (props: DeductionsFromIncomeProps) => {
       return { ...prev, socialInsurancePremium: newDeduction };
     });
   };
+  const setLifeInsurancePremiumDeduction = (newDeduction: Deduction) => {
+    props.setDeductionDict((prev) => {
+      return { ...prev, lifeInsurancePremium: newDeduction };
+    });
+  };
 
   const DeductionInputPanel = (deductionTypeId: DeductionTypeId) => {
     switch (deductionTypeId) {
@@ -52,6 +58,13 @@ export const DeductionsFromIncome = (props: DeductionsFromIncomeProps) => {
           <SocialInsurancePremiumDeductionPanel
             deduction={props.deductionsDict.socialInsurances}
             setDeduction={setSocialInsurancePremiumDeduction}
+          />
+        );
+      case "lifeInsurancePremium":
+        return (
+          <LifeInsurancePremiumDeductionPanel
+            deduction={props.deductionsDict.socialInsurances}
+            setDeduction={setLifeInsurancePremiumDeduction}
           />
         );
       default:
