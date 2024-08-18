@@ -5,7 +5,7 @@ import { formatCcy } from "../../utils";
 
 type MedicalDeductionPanelProps = {
   deduction: Deduction;
-  setDeduction: (medicalExpenseDeduction: Deduction) => void;
+  setDeduction: (deduction: Deduction) => void;
 };
 
 // TODO: 医療費控除の特例＝セルフメディケーション税制に対応する
