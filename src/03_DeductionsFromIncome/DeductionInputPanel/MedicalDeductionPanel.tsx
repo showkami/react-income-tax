@@ -27,7 +27,6 @@ export const MedicalDeductionPanel = (props: MedicalDeductionPanelProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deductionAmount]);
 
-  console.log(props.deduction);
   return (
     <>
       支払った医療費の額:
