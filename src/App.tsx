@@ -10,6 +10,7 @@ import {
 import { deductionTypes } from "./03_DeductionsFromIncome/DeductionTypes";
 import { InputFromSalaryStatement } from "./00_InputFromSalaryStatement/InputFromSalaryStatement";
 import { Accordion } from "./component/Accordion";
+import { formatCcy, sumArray } from "./utils";
 
 function App() {
   // 所得計算用state
@@ -30,6 +31,10 @@ function App() {
   const [deductionSourceDict, setDeductionSourceDict] =
     useState<DeductionSourceDict>(initDeductionSourceDict);
 
+  // 表示ように各種合計金額を計算
+  const income: number = sumArray(Object.values(incomeDict));
+  const deduction: number = sumArray(Object.values(deductionSourceDict));
+
   return (
     <Box width={"100%"}>
       <Accordion
@@ -37,11 +42,11 @@ function App() {
         content={
           <InputFromSalaryStatement setSalaryRevenue={setSalaryRevenue} />
         }
-        defaultExpanded={true}
+        defaultExpanded={false}
       />
 
       <Accordion
-        title={"所得の計算"}
+        title={`所得の計算 (合計所得: ${formatCcy(income)})`}
         content={
           <IncomeInput
             incomeDict={incomeDict}
@@ -57,13 +62,14 @@ function App() {
       />
 
       <Accordion
-        title={"課税所得の計算(所得控除の反映)"}
+        title={`課税所得の計算(所得控除の反映) (合計金額: ${formatCcy(deduction)})`}
         content={
           <DeductionsFromIncome
             deductionSourceDict={deductionSourceDict}
             setDeductionSourceDict={setDeductionSourceDict}
           />
         }
+        defaultExpanded={true}
       />
     </Box>
   );
