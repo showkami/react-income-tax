@@ -41,7 +41,7 @@ export const CurrencyForm = (props: CurrencyFormProps) => {
   return (
     <Input
       type="text"
-      inputProps={{ inputMode: "numeric" }}
+      inputProps={{ inputMode: "numeric", enterKeyHint: "done" }}
       value={displayValue}
       onKeyDown={handleKeyDown}
       onFocus={handleFocus}
