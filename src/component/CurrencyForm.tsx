@@ -41,7 +41,7 @@ export const CurrencyForm = (props: CurrencyFormProps) => {
   return (
     <Input
       type="text"
-      inputMode={"numeric"}
+      inputMode="numeric"
       value={displayValue}
       onKeyDown={handleKeyDown}
       onFocus={handleFocus}
