@@ -41,7 +41,11 @@ export const CurrencyForm = (props: CurrencyFormProps) => {
   return (
     <Input
       type="text"
-      inputProps={{ inputMode: "numeric", enterKeyHint: "done" }}
+      inputProps={{
+        inputMode: "numeric", // iPhoneで入力時に表示される仮想キーボードを数字キーボードにする
+        pattern: "[0-9]*",
+        enterKeyHint: "done",
+      }}
       value={displayValue}
       onKeyDown={handleKeyDown}
       onFocus={handleFocus}
