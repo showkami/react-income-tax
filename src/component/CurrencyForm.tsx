@@ -27,6 +27,13 @@ export const CurrencyForm = (props: CurrencyFormProps) => {
     setIsFocused(false);
   };
 
+  // エンターキーを押したらBlurするようにするためのコールバック
+  const handleKeyDown = (evt: React.KeyboardEvent<HTMLInputElement>) => {
+    if (evt.key === "Enter") {
+      (evt.target as HTMLInputElement).blur();
+    }
+  };
+
   const displayValue = isFocused
     ? props.value.toString()
     : formatCcy(props.value);
@@ -36,6 +43,7 @@ export const CurrencyForm = (props: CurrencyFormProps) => {
       type="text"
       inputMode={"numeric"}
       value={displayValue}
+      onKeyDown={handleKeyDown}
       onFocus={handleFocus}
       onBlur={handleBlur}
       onChange={handleChange}
