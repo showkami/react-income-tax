@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Stack } from "@mui/material";
+
 import { IncomeInput } from "./01_IncomeInput/Income";
-import { incomeTypes } from "./TaxLogic/01_income";
+import { IncomeContextProvider, incomeTypes } from "./TaxLogic/01_income";
 import { AggregationOfProfitLoss } from "./02_AggregationOfProfitLoss/AggregationOfProfitLoss";
 import {
   DeductionsFromIncome,
@@ -26,43 +27,45 @@ function App() {
     useState<DeductionsDict>(initDeductionsDict);
 
   return (
-    <Stack width={"100%"} spacing={1} padding={1}>
-      <Accordion
-        title={"給与明細からインプット"}
-        content={<InputFromSalaryStatement />}
-        defaultExpanded={false}
-      />
+    <IncomeContextProvider>
+      <Stack width={"100%"} spacing={1} padding={1}>
+        <Accordion
+          title={"給与明細からインプット"}
+          content={<InputFromSalaryStatement />}
+          defaultExpanded={false}
+        />
 
-      <Accordion
-        title={`所得の計算`}
-        content={<IncomeInput />}
-        defaultExpanded={true}
-      />
+        <Accordion
+          title={`所得の計算`}
+          content={<IncomeInput />}
+          defaultExpanded={true}
+        />
 
-      <Accordion
-        title={"損益通算及び損失の繰越控除"}
-        content={<AggregationOfProfitLoss />}
-      />
+        <Accordion
+          title={"損益通算及び損失の繰越控除"}
+          content={<AggregationOfProfitLoss />}
+        />
 
-      <Accordion
-        title={`所得控除`}
-        content={
-          <DeductionsFromIncome
-            deductionsDict={deductionsDict}
-            setDeductionDict={setDeductionsDict}
-          />
-        }
-        defaultExpanded={true}
-      />
+        <Accordion
+          title={`所得控除`}
+          content={
+            <DeductionsFromIncome
+              deductionsDict={deductionsDict}
+              setDeductionDict={setDeductionsDict}
+            />
+          }
+          defaultExpanded={true}
+        />
 
-      <Accordion title={"税額控除"} content={<TaxCredit />} />
+        <Accordion title={"税額控除"} content={<TaxCredit />} />
 
-      <Accordion
-        title={"税額計算"}
-        content={<TaxStatement deductionsDict={deductionsDict} />}
-        defaultExpanded={true}
-      />
-    </Stack>
+        <Accordion
+          title={"税額計算"}
+          content={<TaxStatement deductionsDict={deductionsDict} />}
+          defaultExpanded={true}
+        />
+      </Stack>
+    </IncomeContextProvider>
   );
 }
 

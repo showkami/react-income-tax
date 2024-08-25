@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { PropsWithChildren, useContext, useState } from "react";
 import { plusPart } from "./util";
+import { createContext } from "react";
 
 export type IncomeDict = any; // FIXME!!!!!!!!!!!!!!
 
@@ -24,7 +25,9 @@ export const incomeTypes: IncomeType[] = [
 const incomeTypeIds = incomeTypes.map((incomeType) => incomeType.id);
 export type IncomeTypeId = (typeof incomeTypeIds)[number];
 
-export const useIncome = () => {
+export const IncomeContext = createContext<any>(null);
+
+export const IncomeContextProvider = ({ children }: PropsWithChildren) => {
   // 利子所得
   const [interestIncome, setInterestIncome] = useState<number>(0);
 
@@ -57,8 +60,8 @@ export const useIncome = () => {
   // 雑所得
   const [miscellaneousIncome, setMiscellaneousIncome] = useState<number>(0);
 
-  // return
-  return {
+  // まとめ
+  const states = {
     interestIncome,
     setInterestIncome,
     dividendIncome,
@@ -81,6 +84,15 @@ export const useIncome = () => {
     miscellaneousIncome,
     setMiscellaneousIncome,
   };
+
+  return (
+    <IncomeContext.Provider value={states}>{children}</IncomeContext.Provider>
+  );
+};
+
+export const useIncome = () => {
+  // return
+  return useContext(IncomeContext);
 };
 
 /**
