@@ -53,16 +53,41 @@ export const DeductionsContextProvider = ({ children }: PropsWithChildren) => {
 
   // 生命保険料控除
   // TODO: 新契約のみ or 旧契約のみ or 新旧両方 の3パターンある...
-  // const [paidAmountForIppanNewCont, setPaidAmountForIppanNewCont] =
-  //   useState<number>(0);
-  // const [paidAmountForIppanOldCont, setPaidAmountForIppanOldCont] =
-  //   useState<number>(0);
-  // const [paidAmountForKaigoOrIryoNewCont, setPaidAmountForKaigoOrIryoNewCont] =
-  //   useState<number>(0);
-  // const [paidAmountForNenkinNewCont, setPaidAmountForNenkinNewCont] =
-  //   useState<number>(0);
-  // const [paidAmountForNenkinOldCont, setPaidAmountForNenkinOldCont] =
-  //   useState<number>(0);
+  // 各契約について、「支払った保険料」「剰余金・割戻金の合計額」を計算していく
+  type InfoForEachContract = {
+    isNew: boolean;
+    category: "general" | "careOrMedical" | "pension";
+    paidAmount: number;
+    rebatedAmount: number;
+  };
+  const [lifeInsuranceContracts, setLifeInsuranceContracts] = useState<
+    InfoForEachContract[]
+  >([]);
+  // 新旧、一般・介護医療・年金の各カテゴリごとの控除額
+  const paidLifeInsurancePrems = {
+    general: { old: 0, new: 0 },
+    careOrMedical: { old: 0, new: 0 }, // 本当は旧契約の介護医療保険は無いが…入れないと型がめんどいので・・・
+    pension: { old: 0, new: 0 },
+  };
+  for (const contract of lifeInsuranceContracts) {
+    const category = contract.category;
+    if (contract.isNew)
+      paidLifeInsurancePrems[category].new +=
+        contract.paidAmount - contract.rebatedAmount;
+    if (contract.isNew)
+      paidLifeInsurancePrems[category].old +=
+        contract.paidAmount - contract.rebatedAmount;
+  }
+  const deduction = (gross: number)
+  const isAllNew =
+    lifeInsuranceContracts.filter((cont) => cont.isNew).length ===
+    lifeInsuranceContracts.length;
+  const isAllOld =
+    lifeInsuranceContracts.filter((cont) => !cont.isNew).length ===
+    lifeInsuranceContracts.length;
+  if (isAllNew) {
+    paidLifeInsurancePrems.general.new
+  }
 
   // 地震保険料控除
 
