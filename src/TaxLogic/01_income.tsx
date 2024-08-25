@@ -2,8 +2,6 @@ import { PropsWithChildren, useContext, useState } from "react";
 import { plusPart } from "./util";
 import { createContext } from "react";
 
-export type IncomeDict = any; // FIXME!!!!!!!!!!!!!!
-
 type IncomeType = {
   nameJp: string;
   id: string;
@@ -25,7 +23,7 @@ export const incomeTypes: IncomeType[] = [
 const incomeTypeIds = incomeTypes.map((incomeType) => incomeType.id);
 export type IncomeTypeId = (typeof incomeTypeIds)[number];
 
-export const IncomeContext = createContext<any>(null);
+export const IncomeContext = createContext<any>(null); // FIXME... any外せないかな
 
 export const IncomeContextProvider = ({ children }: PropsWithChildren) => {
   // 利子所得

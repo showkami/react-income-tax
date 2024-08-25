@@ -1,4 +1,3 @@
-import { IncomeDict } from "../TaxLogic/01_income";
 import { DeductionsDict } from "../03_DeductionsFromIncome/DeductionsFromIncome";
 import { useEffect, useState } from "react";
 import { ColDef } from "ag-grid-community";
