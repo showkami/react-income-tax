@@ -1,4 +1,4 @@
-import { useIncome } from "../TaxLogic/01_income";
+import { IncomeDict } from "../TaxLogic/01_income";
 import { DeductionsDict } from "../03_DeductionsFromIncome/DeductionsFromIncome";
 import { useEffect, useState } from "react";
 import { ColDef } from "ag-grid-community";
@@ -6,7 +6,7 @@ import { Grid, uneditableMoneyColumn } from "../component/Grid";
 import { formatCcy, sumArray } from "../utils";
 import { applyIncomeTaxRate, getIncomeTaxRate } from "./applyIncomeTaxRate";
 import { applyResidentTaxRate } from "./applyResidentTaxRate";
-import { calcTaxBase } from "../TaxLogic/10_taxBase";
+import { useTaxBase } from "../TaxLogic/10_taxBase";
 
 type StatementRow = {
   item: string;
@@ -20,17 +20,7 @@ type TaxStatementProps = {
 
 export const TaxStatement = (props: TaxStatementProps) => {
   // 課税標準を計算
-  const income = useIncome();
-  console.log("TaxStatement income=", income);
-  const { grossIncome } = calcTaxBase(
-    income.interestIncome,
-    income.dividendIncome,
-    income.realPropertyIncome,
-    income.businessIncome,
-    income.salaryIncome,
-    income.occasionalIncome,
-    income.miscellaneousIncome,
-  );
+  const { grossIncome } = useTaxBase();
 
   // 所得控除
   const deductionAmtForIncomeTax = sumArray(

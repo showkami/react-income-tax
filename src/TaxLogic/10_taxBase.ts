@@ -1,5 +1,4 @@
 import { useIncome } from "./01_income";
-import { useMemo } from "react";
 
 /**
  * 各種所得の金額を受け取って、それを各種課税標準に分配する。
@@ -21,18 +20,20 @@ import { useMemo } from "react";
  *
  * // TODO: 損益通算や繰越控除を考慮できるようにする
  */
-export const calcTaxBase = (
-  interestIncome: number,
-  dividendIncome: number,
-  realPropertyIncome: number,
-  businessIncome: number,
-  salaryIncome: number,
-  // retirementIncome: number,
-  // timberIncome: number,
-  // capitalGains: number,
-  occasionalIncome: number,
-  miscellaneousIncome: number,
-) => {
+export const useTaxBase = () => {
+  const {
+    interestIncome,
+    dividendIncome,
+    realPropertyIncome,
+    businessIncome,
+    salaryIncome,
+    // retirementIncome,
+    // timberIncome,
+    // capitalGains,
+    occasionalIncome,
+    miscellaneousIncome,
+  } = useIncome();
+
   // 総所得金額
   const grossIncome =
     interestIncome +
@@ -44,7 +45,6 @@ export const calcTaxBase = (
     occasionalIncome / 2 +
     miscellaneousIncome;
 
-  console.log(`salaryIncome=${salaryIncome}, grossIncome=${grossIncome}`);
   return {
     grossIncome,
   };
