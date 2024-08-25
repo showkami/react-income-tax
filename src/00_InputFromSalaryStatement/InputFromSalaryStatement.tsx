@@ -4,6 +4,7 @@ import { CellValueChangedEvent, ColDef } from "ag-grid-community";
 import { sumArray } from "../utils";
 import { getStandardizedMonthlyRemuneration } from "./getStandardizedMonthlyRemuneration";
 import { useIncome } from "../TaxLogic/01_income";
+import { useDeduction } from "../TaxLogic/03_deductionsFromIncome";
 
 type MonthlySalaryWithhold = {
   month: string;
@@ -57,13 +58,29 @@ const generateRowDataFromEachColumn = (
   });
 };
 
+/**
+ * TODO
+ *    - 保険料率を変えられるようにする
+ */
 export const InputFromSalaryStatement = () => {
   const { setSalaryRevenue } = useIncome();
-  // 各項目を格納する state を定義
+  const { setPaidSocialInsurancePremium } = useDeduction();
+
+  // 保険料率とか
+  const [pensionInsurancePremRate] = useState<number>(18.3 / 2 / 100);
+  const [healthInsurancePremRate] = useState<number>(
+    3.05 / 100, //三井住友銀行健康保険組合の被保険者負担率 see https://www.smbc-kenpo.or.jp/member/outline/fee.html#cat05Outline02
+  );
+  const [careInsurancePremRate] = useState<number>(
+    // 0.9 / 100, //三井住友銀行健康保険組合の被保険者負担率 see https://www.smbc-kenpo.or.jp/member/outline/fee.html#cat05Outline02
+    0, // 40歳未満（以下？）は0
+  );
+
+  // 各項目 (各月の給与総額・標準報酬月額・厚生年金保険料・健康保険料・介護保険料) を格納する state を定義
   const zeroinit = payMonths.map((m) => 0);
   const [totalPayrolls, setTotalPayrolls] = useState(zeroinit);
   const [standardizedPays, setStandardizedPays] = useState(zeroinit);
-  const [employeePensionInsurancePrems, setEmployeePensionInsurancePrems] =
+  const [pensionInsurancePrems, setPensionInsurancePrems] =
     useState<number[]>(zeroinit);
   const [healthInsurancePrems, setHealthInsurancePrems] =
     useState<number[]>(zeroinit);
@@ -71,6 +88,21 @@ export const InputFromSalaryStatement = () => {
     useState<number[]>(zeroinit);
   const [incomeTaxes, setIncomeTaxes] = useState<number[]>(zeroinit);
   const [residentTaxes, setResidentTaxes] = useState<number[]>(zeroinit);
+
+  // 社会保険料の合計が変わった時には更新
+  // TODO: このeffectの使い方間違ってるんじゃないかなあ・・・effect不要なパターンな気がするが・・
+  useEffect(() => {
+    setPaidSocialInsurancePremium(
+      sumArray(pensionInsurancePrems) +
+        sumArray(healthInsurancePrems) +
+        sumArray(careInsurancePrems),
+    );
+  }, [
+    setPaidSocialInsurancePremium,
+    pensionInsurancePrems,
+    healthInsurancePrems,
+    careInsurancePrems,
+  ]);
 
   const handleTotalPayrollsChanged = (idx: number, newPayroll: number) => {
     // totalPayrollsの更新
@@ -93,6 +125,47 @@ export const InputFromSalaryStatement = () => {
     const newStandardizedPays = [...standardizedPays];
     newStandardizedPays[idx] = newStandardizedPay;
     setStandardizedPays(newStandardizedPays);
+
+    // 該当する月の厚生年金保険料・健康保険料・介護保険料の更新
+    handlePensionInsurancePremChange(
+      idx,
+      newStandardizedPay * pensionInsurancePremRate,
+    );
+    handleHealthInsurancePremChange(
+      idx,
+      newStandardizedPay * healthInsurancePremRate,
+    );
+    handleCareInsurancePremChange(
+      idx,
+      newStandardizedPay * careInsurancePremRate,
+    );
+  };
+
+  const handlePensionInsurancePremChange = (
+    idx: number,
+    newPensionInsurancePrem: number,
+  ) => {
+    const newPensionInsurancePrems = [...pensionInsurancePrems];
+    newPensionInsurancePrems[idx] = newPensionInsurancePrem;
+    setPensionInsurancePrems(newPensionInsurancePrems);
+  };
+
+  const handleHealthInsurancePremChange = (
+    idx: number,
+    newHealthInsurancePrem: number,
+  ) => {
+    const newHealthInsurancePrems = [...healthInsurancePrems];
+    newHealthInsurancePrems[idx] = newHealthInsurancePrem;
+    setHealthInsurancePrems(newHealthInsurancePrems);
+  };
+
+  const handleCareInsurancePremChange = (
+    idx: number,
+    newCareInsurancePrem: number,
+  ) => {
+    const newCareInsurancePrems = [...careInsurancePrems];
+    newCareInsurancePrems[idx] = newCareInsurancePrem;
+    setCareInsurancePrems(newCareInsurancePrems);
   };
 
   // AGGrid定義
@@ -148,7 +221,7 @@ export const InputFromSalaryStatement = () => {
       payMonths,
       totalPayrolls,
       standardizedPays,
-      employeePensionInsurancePrems,
+      pensionInsurancePrems,
       healthInsurancePrems,
       careInsurancePrems,
       incomeTaxes,
@@ -158,7 +231,7 @@ export const InputFromSalaryStatement = () => {
   }, [
     totalPayrolls,
     standardizedPays,
-    employeePensionInsurancePrems,
+    pensionInsurancePrems,
     healthInsurancePrems,
     careInsurancePrems,
     incomeTaxes,
@@ -171,23 +244,13 @@ export const InputFromSalaryStatement = () => {
     if (columnId === "totalPayroll") {
       handleTotalPayrollsChanged(idx, evt.newValue);
     } else if (columnId === "standardizedPay") {
-      const newStandardizedPay = [...standardizedPays];
-      newStandardizedPay[idx] = evt.newValue;
-      setStandardizedPays(newStandardizedPay);
+      handleStandardizedPayChange(idx, evt.newValue);
     } else if (columnId === "employeePensionInsurancePrem") {
-      const newEmployeePensionInsurancePrems = [
-        ...employeePensionInsurancePrems,
-      ];
-      newEmployeePensionInsurancePrems[idx] = evt.newValue;
-      setEmployeePensionInsurancePrems(newEmployeePensionInsurancePrems);
+      handlePensionInsurancePremChange(idx, evt.newValue);
     } else if (columnId === "healthInsurancePrem") {
-      const newHealthInsurancePrems = [...healthInsurancePrems];
-      newHealthInsurancePrems[idx] = evt.newValue;
-      setHealthInsurancePrems(newHealthInsurancePrems);
+      handleHealthInsurancePremChange(idx, evt.newValue);
     } else if (columnId === "careInsurancePrem") {
-      const newCareInsurancePrems = [...careInsurancePrems];
-      newCareInsurancePrems[idx] = evt.newValue;
-      setCareInsurancePrems(newCareInsurancePrems);
+      handleCareInsurancePremChange(idx, evt.newValue);
     } else if (columnId === "incomeTax") {
       const newIncomeTaxes = [...incomeTaxes];
       newIncomeTaxes[idx] = evt.newValue;
@@ -201,6 +264,9 @@ export const InputFromSalaryStatement = () => {
 
   return (
     <>
+      厚生年金保険料率: {pensionInsurancePremRate * 100} %<br />
+      健康保険料率: {healthInsurancePremRate * 100} %<br />
+      介護保険料率: {careInsurancePremRate * 100} %<br />
       <Grid<MonthlySalaryWithhold>
         height={600}
         columnDefs={columnDefs}
