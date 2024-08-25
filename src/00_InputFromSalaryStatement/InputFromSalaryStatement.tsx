@@ -264,6 +264,9 @@ export const InputFromSalaryStatement = () => {
 
   return (
     <>
+      厚生年金保険料率: {pensionInsurancePremRate * 100} %<br />
+      健康保険料率: {healthInsurancePremRate * 100} %<br />
+      介護保険料率: {careInsurancePremRate * 100} %<br />
       <Grid<MonthlySalaryWithhold>
         height={600}
         columnDefs={columnDefs}
