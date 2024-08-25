@@ -1,4 +1,4 @@
-import { IncomeDict } from "../01_IncomeInput/Income";
+import { useIncome } from "./01_income";
 
 /**
  * 各種所得の金額を受け取って、それを各種課税標準に分配する。
@@ -17,21 +17,35 @@ import { IncomeDict } from "../01_IncomeInput/Income";
  *     - 退職所得金額（分離課税）※住民税のみ
  * see 『所得税・個人住民税ガイドブック』十六　所得税額等の計算過程 (p.313)
  *
- * @param incomeDict
  *
  * // TODO: 損益通算や繰越控除を考慮できるようにする
  */
-export const calcTaxBase = (incomeDict: IncomeDict) => {
+export const useTaxBase = () => {
+  const {
+    interestIncome,
+    dividendIncome,
+    realPropertyIncome,
+    businessIncome,
+    salaryIncome,
+    // retirementIncome,
+    // timberIncome,
+    // capitalGains,
+    occasionalIncome,
+    miscellaneousIncome,
+  } = useIncome();
+
+  // 総所得金額
   const grossIncome =
-    incomeDict.interest +
-    incomeDict.dividend +
-    incomeDict.realProperty +
-    incomeDict.business +
-    incomeDict.salary +
+    interestIncome +
+    dividendIncome +
+    realPropertyIncome +
+    businessIncome +
+    salaryIncome +
     //  // TODO: incomeDict側で譲渡所得を6つに分離してから、短期と長期/2を足す;
-    incomeDict.occasional / 2 +
-    incomeDict.miscellaneous;
+    occasionalIncome / 2 +
+    miscellaneousIncome;
+
   return {
-    grossIncome: grossIncome,
+    grossIncome,
   };
 };

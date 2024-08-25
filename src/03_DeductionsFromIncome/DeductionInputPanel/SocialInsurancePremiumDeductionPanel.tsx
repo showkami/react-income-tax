@@ -1,29 +1,17 @@
-import { Deduction } from "../DeductionsFromIncome";
-import { useEffect, useState } from "react";
 import { CurrencyForm } from "../../component/CurrencyForm";
+import { useDeduction } from "../../TaxLogic/03_deductionsFromIncome";
 
-type SocialInsurancePremiumDeductionPanelProps = {
-  deduction: Deduction;
-  setDeduction: (deduction: Deduction) => void;
-};
-
-export const SocialInsurancePremiumDeductionPanel = (
-  props: SocialInsurancePremiumDeductionPanelProps,
-) => {
+export const SocialInsurancePremiumDeductionPanel = () => {
   // TODO: 給与明細からのインプットに対応
-  const [paidAmount, setPaidAmount] = useState<number>(0);
-
-  useEffect(() => {
-    props.setDeduction({
-      forIncomeTax: paidAmount,
-      forResidentTax: paidAmount,
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [paidAmount]);
+  const { paidSocialInsurancePremium, setPaidSocialInsurancePremium } =
+    useDeduction();
   return (
     <>
       支払った金額：
-      <CurrencyForm value={paidAmount} onChangeValue={setPaidAmount} />
+      <CurrencyForm
+        value={paidSocialInsurancePremium}
+        onChangeValue={setPaidSocialInsurancePremium}
+      />
     </>
   );
 };

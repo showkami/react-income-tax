@@ -2,7 +2,6 @@ type IncomeType = {
   nameJp: string;
   id: string;
 };
-
 export const incomeTypes: IncomeType[] = [
   { nameJp: "利子", id: "interest" },
   { nameJp: "配当", id: "dividend" },
@@ -15,6 +14,3 @@ export const incomeTypes: IncomeType[] = [
   { nameJp: "一時", id: "occasional" },
   { nameJp: "雑", id: "miscellaneous" },
 ];
-
-const incomeTypeIds = incomeTypes.map((incomeType) => incomeType.id);
-export type IncomeTypeId = (typeof incomeTypeIds)[number];

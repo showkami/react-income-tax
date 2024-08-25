@@ -1,12 +1,11 @@
-import { IncomeDict } from "../01_IncomeInput/Income";
-import { DeductionsDict } from "../03_DeductionsFromIncome/DeductionsFromIncome";
 import { useEffect, useState } from "react";
 import { ColDef } from "ag-grid-community";
 import { Grid, uneditableMoneyColumn } from "../component/Grid";
-import { calcTaxBase } from "./calcTaxBase";
-import { formatCcy, sumArray } from "../utils";
+import { formatCcy } from "../utils";
 import { applyIncomeTaxRate, getIncomeTaxRate } from "./applyIncomeTaxRate";
 import { applyResidentTaxRate } from "./applyResidentTaxRate";
+import { useTaxBase } from "../TaxLogic/10_taxBase";
+import { useDeduction } from "../TaxLogic/03_deductionsFromIncome";
 
 type StatementRow = {
   item: string;
@@ -14,36 +13,21 @@ type StatementRow = {
   residentTaxCalc: number;
 };
 
-type TaxStatementProps = {
-  incomeDict: IncomeDict;
-  deductionsDict: DeductionsDict;
-};
-
-export const TaxStatement = (props: TaxStatementProps) => {
+export const TaxStatement = () => {
   // 課税標準を計算
-  const incomeDict = props.incomeDict;
-  const { grossIncome } = calcTaxBase(incomeDict);
+  const { grossIncome } = useTaxBase();
 
   // 所得控除
-  const deductionAmtForIncomeTax = sumArray(
-    Object.entries(props.deductionsDict).map(
-      ([typeId, deduction]) => deduction.forIncomeTax,
-    ),
-  );
-  const deductionAmtForResidentTax = sumArray(
-    Object.entries(props.deductionsDict).map(
-      ([typeId, deduction]) => deduction.forResidentTax,
-    ),
-  );
+  const { totalDeductionAmount } = useDeduction();
 
   // 課税所得金額
   const taxableGrossIncomeForIncomeTax = Math.max(
     0,
-    grossIncome - deductionAmtForIncomeTax,
+    grossIncome - totalDeductionAmount.forIncomeTax,
   );
   const taxableGrossIncomeForResidentTax = Math.max(
     0,
-    grossIncome - deductionAmtForResidentTax,
+    grossIncome - totalDeductionAmount.forResidentTax,
   );
   // MEMO: 他の課税所得金額 (課税短期譲渡所得金額とか) もちゃんと計算する際は、
   //       所得控除をダブルで引かないように、所得控除プールを作っておいたり
@@ -117,8 +101,8 @@ export const TaxStatement = (props: TaxStatementProps) => {
       // MEMO: 他の課税標準 (「短期譲渡所得の金額」とか) も入れる
       {
         item: "所得控除",
-        incomeTaxCalc: -1 * deductionAmtForIncomeTax,
-        residentTaxCalc: -1 * deductionAmtForResidentTax,
+        incomeTaxCalc: -1 * totalDeductionAmount.forIncomeTax,
+        residentTaxCalc: -1 * totalDeductionAmount.forResidentTax,
       },
       {
         // 総所得金額 - 所得控除
@@ -145,8 +129,7 @@ export const TaxStatement = (props: TaxStatementProps) => {
     ]);
   }, [
     grossIncome,
-    deductionAmtForIncomeTax,
-    deductionAmtForResidentTax,
+    totalDeductionAmount,
     taxableGrossIncomeForIncomeTax,
     taxableGrossIncomeForResidentTax,
     incomeTaxBeforeCredit,
