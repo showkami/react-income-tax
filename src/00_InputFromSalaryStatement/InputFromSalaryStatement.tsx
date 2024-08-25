@@ -4,6 +4,7 @@ import { CellValueChangedEvent, ColDef } from "ag-grid-community";
 import { sumArray } from "../utils";
 import { getStandardizedMonthlyRemuneration } from "./getStandardizedMonthlyRemuneration";
 import { useIncome } from "../TaxLogic/01_income";
+import { useDeduction } from "../TaxLogic/03_deductionsFromIncome";
 
 type MonthlySalaryWithhold = {
   month: string;
@@ -59,11 +60,25 @@ const generateRowDataFromEachColumn = (
 
 export const InputFromSalaryStatement = () => {
   const { setSalaryRevenue } = useIncome();
-  // 各項目を格納する state を定義
+  const { setPaidSocialInsurancePremium } = useDeduction();
+
+  // 保険料率とか
+  const [pensionInsurancePremRate, setPensionInsurancePremRate] =
+    useState<number>(18.3 / 2 / 100);
+  const [healthInsurancePremRate, setHealthInsurancePremRate] =
+    useState<number>(
+      3.05 / 100, //三井住友銀行健康保険組合の被保険者負担率 see https://www.smbc-kenpo.or.jp/member/outline/fee.html#cat05Outline02
+    );
+  const [careInsurancePremRate, setCareInsurancePremRate] = useState<number>(
+    // 0.9 / 100, //三井住友銀行健康保険組合の被保険者負担率 see https://www.smbc-kenpo.or.jp/member/outline/fee.html#cat05Outline02
+    0, // 40歳未満（以下？）は0
+  );
+
+  // 各項目 (各月の給与総額・標準報酬月額・厚生年金保険料・健康保険料・介護保険料) を格納する state を定義
   const zeroinit = payMonths.map((m) => 0);
   const [totalPayrolls, setTotalPayrolls] = useState(zeroinit);
   const [standardizedPays, setStandardizedPays] = useState(zeroinit);
-  const [employeePensionInsurancePrems, setEmployeePensionInsurancePrems] =
+  const [pensionInsurancePrems, setPensionInsurancePrems] =
     useState<number[]>(zeroinit);
   const [healthInsurancePrems, setHealthInsurancePrems] =
     useState<number[]>(zeroinit);
@@ -93,6 +108,71 @@ export const InputFromSalaryStatement = () => {
     const newStandardizedPays = [...standardizedPays];
     newStandardizedPays[idx] = newStandardizedPay;
     setStandardizedPays(newStandardizedPays);
+
+    // 該当する月の厚生年金保険料・健康保険料・介護保険料の更新
+    handlePensionInsurancePremChange(
+      idx,
+      newStandardizedPay * pensionInsurancePremRate,
+    );
+    handleHealthInsurancePremChange(
+      idx,
+      newStandardizedPay * healthInsurancePremRate,
+    );
+    handleCareInsurancePremChange(
+      idx,
+      newStandardizedPay * careInsurancePremRate,
+    );
+  };
+
+  const handlePensionInsurancePremChange = (
+    idx: number,
+    newPensionInsurancePrem: number,
+  ) => {
+    const newPensionInsurancePrems = [...pensionInsurancePrems];
+    newPensionInsurancePrems[idx] = newPensionInsurancePrem;
+    setPensionInsurancePrems(newPensionInsurancePrems);
+
+    // 社会保険料支払い総額の更新
+    // TODO: 3つ一気に更新される場合にこれで正しく更新できるのか・・・？
+    setPaidSocialInsurancePremium(
+      sumArray(newPensionInsurancePrems) +
+        sumArray(healthInsurancePrems) +
+        sumArray(careInsurancePrems),
+    );
+  };
+
+  const handleHealthInsurancePremChange = (
+    idx: number,
+    newHealthInsurancePrem: number,
+  ) => {
+    const newHealthInsurancePrems = [...healthInsurancePrems];
+    newHealthInsurancePrems[idx] = newHealthInsurancePrem;
+    setHealthInsurancePrems(newHealthInsurancePrems);
+
+    // 社会保険料支払い総額の更新
+    // TODO: 3つ一気に更新される場合にこれで正しく更新できるのか・・・？
+    setPaidSocialInsurancePremium(
+      sumArray(pensionInsurancePrems) +
+        sumArray(newHealthInsurancePrems) +
+        sumArray(careInsurancePrems),
+    );
+  };
+
+  const handleCareInsurancePremChange = (
+    idx: number,
+    newCareInsurancePrem: number,
+  ) => {
+    const newCareInsurancePrems = [...careInsurancePrems];
+    newCareInsurancePrems[idx] = newCareInsurancePrem;
+    setCareInsurancePrems(newCareInsurancePrems);
+
+    // 社会保険料支払い総額の更新
+    // TODO: 3つ一気に更新される場合にこれで正しく更新できるのか・・・？
+    setPaidSocialInsurancePremium(
+      sumArray(pensionInsurancePrems) +
+        sumArray(healthInsurancePrems) +
+        sumArray(newCareInsurancePrems),
+    );
   };
 
   // AGGrid定義
@@ -148,7 +228,7 @@ export const InputFromSalaryStatement = () => {
       payMonths,
       totalPayrolls,
       standardizedPays,
-      employeePensionInsurancePrems,
+      pensionInsurancePrems,
       healthInsurancePrems,
       careInsurancePrems,
       incomeTaxes,
@@ -158,7 +238,7 @@ export const InputFromSalaryStatement = () => {
   }, [
     totalPayrolls,
     standardizedPays,
-    employeePensionInsurancePrems,
+    pensionInsurancePrems,
     healthInsurancePrems,
     careInsurancePrems,
     incomeTaxes,
@@ -171,23 +251,13 @@ export const InputFromSalaryStatement = () => {
     if (columnId === "totalPayroll") {
       handleTotalPayrollsChanged(idx, evt.newValue);
     } else if (columnId === "standardizedPay") {
-      const newStandardizedPay = [...standardizedPays];
-      newStandardizedPay[idx] = evt.newValue;
-      setStandardizedPays(newStandardizedPay);
+      handleStandardizedPayChange(idx, evt.newValue);
     } else if (columnId === "employeePensionInsurancePrem") {
-      const newEmployeePensionInsurancePrems = [
-        ...employeePensionInsurancePrems,
-      ];
-      newEmployeePensionInsurancePrems[idx] = evt.newValue;
-      setEmployeePensionInsurancePrems(newEmployeePensionInsurancePrems);
+      handlePensionInsurancePremChange(idx, evt.newValue);
     } else if (columnId === "healthInsurancePrem") {
-      const newHealthInsurancePrems = [...healthInsurancePrems];
-      newHealthInsurancePrems[idx] = evt.newValue;
-      setHealthInsurancePrems(newHealthInsurancePrems);
+      handleHealthInsurancePremChange(idx, evt.newValue);
     } else if (columnId === "careInsurancePrem") {
-      const newCareInsurancePrems = [...careInsurancePrems];
-      newCareInsurancePrems[idx] = evt.newValue;
-      setCareInsurancePrems(newCareInsurancePrems);
+      handleCareInsurancePremChange(idx, evt.newValue);
     } else if (columnId === "incomeTax") {
       const newIncomeTaxes = [...incomeTaxes];
       newIncomeTaxes[idx] = evt.newValue;
