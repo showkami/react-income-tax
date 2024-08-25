@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Stack } from "@mui/material";
-import { IncomeDict, IncomeInput } from "./01_IncomeInput/Income";
-import { incomeTypes } from "./01_IncomeInput/IncomeTypes";
+import { IncomeInput } from "./01_IncomeInput/Income";
+import { incomeTypes } from "./TaxLogic/01_income";
 import { AggregationOfProfitLoss } from "./02_AggregationOfProfitLoss/AggregationOfProfitLoss";
 import {
   DeductionsFromIncome,
@@ -14,15 +14,6 @@ import { TaxCredit } from "./04_TaxCredit/TaxCredit";
 import { TaxStatement } from "./10_TaxStatement/TaxStatement";
 
 function App() {
-  // 所得計算用state
-  const initIncomeDict: IncomeDict = Object.fromEntries(
-    incomeTypes.map((incomeType) => {
-      return [incomeType.id, 0];
-    }),
-  );
-  const [incomeDict, setIncomeDict] = useState<IncomeDict>(initIncomeDict);
-  const [salaryRevenue, setSalaryRevenue] = useState<number>(0);
-
   // 所得控除の元となる数値state
   const initDeductionsDict: DeductionsDict = Object.fromEntries(
     deductionTypes.map((deductionType) => {
@@ -38,21 +29,13 @@ function App() {
     <Stack width={"100%"} spacing={1} padding={1}>
       <Accordion
         title={"給与明細からインプット"}
-        content={
-          <InputFromSalaryStatement setSalaryRevenue={setSalaryRevenue} />
-        }
+        content={<InputFromSalaryStatement />}
         defaultExpanded={false}
       />
 
       <Accordion
         title={`所得の計算`}
-        content={
-          <IncomeInput
-            incomeDict={incomeDict}
-            setIncomeDict={setIncomeDict}
-            salaryRevenue={salaryRevenue}
-          />
-        }
+        content={<IncomeInput />}
         defaultExpanded={true}
       />
 
@@ -76,12 +59,7 @@ function App() {
 
       <Accordion
         title={"税額計算"}
-        content={
-          <TaxStatement
-            incomeDict={incomeDict}
-            deductionsDict={deductionsDict}
-          />
-        }
+        content={<TaxStatement deductionsDict={deductionsDict} />}
         defaultExpanded={true}
       />
     </Stack>

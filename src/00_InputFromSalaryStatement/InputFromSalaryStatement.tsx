@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { CellValueChangedEvent, ColDef } from "ag-grid-community";
 import { sumArray } from "../utils";
 import { getStandardizedMonthlyRemuneration } from "./getStandardizedMonthlyRemuneration";
+import { useIncome } from "../TaxLogic/01_income";
 
 type MonthlySalaryWithhold = {
   month: string;
@@ -56,13 +57,8 @@ const generateRowDataFromEachColumn = (
   });
 };
 
-type InputFromSalaryStatementProps = {
-  setSalaryRevenue: (salaryIncome: number) => void;
-};
-
-export const InputFromSalaryStatement = (
-  props: InputFromSalaryStatementProps,
-) => {
+export const InputFromSalaryStatement = () => {
+  const { setSalaryRevenue } = useIncome();
   // 各項目を格納する state を定義
   const zeroinit = payMonths.map((m) => 0);
   const [totalPayrolls, setTotalPayrolls] = useState(zeroinit);
@@ -83,7 +79,7 @@ export const InputFromSalaryStatement = (
     setTotalPayrolls(newTotalPayrolls);
 
     // 給与収入金額の更新
-    props.setSalaryRevenue(sumArray(newTotalPayrolls));
+    setSalaryRevenue(sumArray(newTotalPayrolls));
 
     // 該当する月の標準報酬月額の更新 // TODO: 標準報酬月額か標準賞与額かどっちを取りに行くかの分岐が必要
     const newStandardizedPay = getStandardizedMonthlyRemuneration(newPayroll);

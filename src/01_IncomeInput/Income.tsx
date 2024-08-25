@@ -1,36 +1,15 @@
 import { Tab, Tabs } from "@mui/material";
 import React, { useState } from "react";
 import { SalaryIncomeInput } from "./IncomeInputPanel/SalaryIncomeInput";
-import { IncomeTypeId, incomeTypes } from "./IncomeTypes";
+import { IncomeTypeId, incomeTypes } from "../TaxLogic/01_income";
 
-export type Income = number;
-export type IncomeDict = { [key: IncomeTypeId]: Income };
-
-type IncomeInputProps = {
-  incomeDict: IncomeDict;
-  setIncomeDict: React.Dispatch<React.SetStateAction<IncomeDict>>;
-  salaryRevenue: number;
-};
-
-export const IncomeInput = (props: IncomeInputProps) => {
+export const IncomeInput = () => {
   const [selectedTab, setSelectedTab] = useState<string>("salary");
-
-  const setSalaryIncome = (newValue: number) => {
-    props.setIncomeDict((prev) => {
-      return { ...prev, salary: newValue };
-    });
-  };
 
   const IncomeInputPanel = (incomeTypeId: string) => {
     switch (incomeTypeId) {
       case "salary":
-        return (
-          <SalaryIncomeInput
-            salaryIncome={props.incomeDict.salary}
-            setSalaryIncome={setSalaryIncome}
-            salaryRevenueFromSalaryStatement={props.salaryRevenue}
-          />
-        );
+        return <SalaryIncomeInput />;
       default:
         return <>Not implemented so far...</>;
     }
