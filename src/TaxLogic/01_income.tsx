@@ -1,7 +1,31 @@
 import { createContext, PropsWithChildren, useContext, useState } from "react";
 import { plusPart } from "./util";
+import { calcSalaryIncomeDeduction } from "./01_incomeUtils";
 
-export const IncomeContext = createContext<any>(null); // FIXME... any外せないかな
+type IncomeContextType = {
+  interestIncome: number;
+  setInterestIncome: React.Dispatch<React.SetStateAction<number>>;
+  dividendIncome: number;
+  setDividendIncome: React.Dispatch<React.SetStateAction<number>>;
+  realPropertyIncome: number;
+  setRealPropertyIncome: React.Dispatch<React.SetStateAction<number>>;
+  businessIncome: number;
+  setBusinessIncome: React.Dispatch<React.SetStateAction<number>>;
+  salaryRevenue: number;
+  setSalaryRevenue: React.Dispatch<React.SetStateAction<number>>;
+  salaryIncome: number;
+  retirementIncome: number;
+  setRetirementIncome: React.Dispatch<React.SetStateAction<number>>;
+  timberIncome: number;
+  setTimberIncome: React.Dispatch<React.SetStateAction<number>>;
+  capitalGains: number;
+  setCapitalGains: React.Dispatch<React.SetStateAction<number>>;
+  occasionalIncome: number;
+  setOccasionalIncome: React.Dispatch<React.SetStateAction<number>>;
+  miscellaneousIncome: number;
+  setMiscellaneousIncome: React.Dispatch<React.SetStateAction<number>>;
+};
+export const IncomeContext = createContext<IncomeContextType>({});
 
 export const IncomeContextProvider = ({ children }: PropsWithChildren) => {
   // 利子所得
@@ -69,27 +93,4 @@ export const IncomeContextProvider = ({ children }: PropsWithChildren) => {
 export const useIncome = () => {
   // return
   return useContext(IncomeContext);
-};
-
-/**
- * 給与所得控除の金額の計算
- * @param revenue 給与収入金額
- * @return 給与所得控除
- *
- * 参考: https://www.nta.go.jp/taxes/shiraberu/taxanswer/shotoku/1410.htm
- */
-const calcSalaryIncomeDeduction = (revenue: number): number => {
-  if (revenue <= 1_625_000) {
-    return 550_000;
-  } else if (revenue <= 1_800_000) {
-    return revenue * 0.1 - 100_000;
-  } else if (revenue <= 3_600_000) {
-    return revenue * 0.3 + 80_000;
-  } else if (revenue <= 6_600_000) {
-    return revenue * 0.2 + 440_000;
-  } else if (revenue <= 8_500_000) {
-    return revenue * 0.1 + 1_100_000;
-  } else {
-    return 1_950_000;
-  }
 };
