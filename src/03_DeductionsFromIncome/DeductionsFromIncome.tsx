@@ -1,71 +1,23 @@
 import React, { useState } from "react";
 import { Tab, Tabs } from "@mui/material";
-import { DeductionTypeId, deductionTypes } from "./DeductionTypes";
+import { DeductionTypeId, deductionTypes } from "../TaxLogic/03_deductionTypes";
 import { MedicalDeductionPanel } from "./DeductionInputPanel/MedicalDeductionPanel";
 import { SocialInsurancePremiumDeductionPanel } from "./DeductionInputPanel/SocialInsurancePremiumDeductionPanel";
 import { LifeInsurancePremiumDeductionPanel } from "./DeductionInputPanel/LifeInsurancePremiumDeductionPanel";
 
-/**
- * ある所得控除項目の、所得税用の所得控除・住民税用の所得控除
- */
-export type Deduction = {
-  forIncomeTax: number; // 所得税計算上の所得控除
-  forResidentTax: number; // 住民税計算上の所得控除
-};
-/**
- * 各所得控除の情報を持ったdict
- */
-export type DeductionsDict = { [key: DeductionTypeId]: Deduction };
-
-type DeductionsFromIncomeProps = {
-  deductionsDict: DeductionsDict;
-  setDeductionDict: React.Dispatch<React.SetStateAction<DeductionsDict>>;
-};
-
-export const DeductionsFromIncome = (props: DeductionsFromIncomeProps) => {
+export const DeductionsFromIncome = () => {
   const [selectedTab, setSelectedTab] = useState<string>(
     "socialInsurancePremium",
   );
 
-  const setMedicalExpensesDeduction = (newDeduction: Deduction) => {
-    props.setDeductionDict((prev) => {
-      return { ...prev, medicalExpenses: newDeduction };
-    });
-  };
-  const setSocialInsurancePremiumDeduction = (newDeduction: Deduction) => {
-    props.setDeductionDict((prev) => {
-      return { ...prev, socialInsurancePremium: newDeduction };
-    });
-  };
-  const setLifeInsurancePremiumDeduction = (newDeduction: Deduction) => {
-    props.setDeductionDict((prev) => {
-      return { ...prev, lifeInsurancePremium: newDeduction };
-    });
-  };
-
   const DeductionInputPanel = (deductionTypeId: DeductionTypeId) => {
     switch (deductionTypeId) {
       case "medicalExpenses":
-        return (
-          <MedicalDeductionPanel
-            deduction={props.deductionsDict.medicalExpenses}
-            setDeduction={setMedicalExpensesDeduction}
-          />
-        );
+        return <MedicalDeductionPanel />;
       case "socialInsurancePremium":
-        return (
-          <SocialInsurancePremiumDeductionPanel
-            deduction={props.deductionsDict.socialInsurances}
-            setDeduction={setSocialInsurancePremiumDeduction}
-          />
-        );
+        return <SocialInsurancePremiumDeductionPanel />;
       case "lifeInsurancePremium":
-        return (
-          <LifeInsurancePremiumDeductionPanel
-            deduction={props.deductionsDict.socialInsurances}
-            setDeduction={setLifeInsurancePremiumDeduction}
-          />
-        );
+        return <LifeInsurancePremiumDeductionPanel />;
       default:
         return <>Not Implemented...</>;
     }
