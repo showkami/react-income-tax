@@ -67,13 +67,11 @@ export const InputFromSalaryStatement = () => {
   const { setPaidSocialInsurancePremium } = useDeduction();
 
   // 保険料率とか
-  const [pensionInsurancePremRate, setPensionInsurancePremRate] =
-    useState<number>(18.3 / 2 / 100);
-  const [healthInsurancePremRate, setHealthInsurancePremRate] =
-    useState<number>(
-      3.05 / 100, //三井住友銀行健康保険組合の被保険者負担率 see https://www.smbc-kenpo.or.jp/member/outline/fee.html#cat05Outline02
-    );
-  const [careInsurancePremRate, setCareInsurancePremRate] = useState<number>(
+  const [pensionInsurancePremRate] = useState<number>(18.3 / 2 / 100);
+  const [healthInsurancePremRate] = useState<number>(
+    3.05 / 100, //三井住友銀行健康保険組合の被保険者負担率 see https://www.smbc-kenpo.or.jp/member/outline/fee.html#cat05Outline02
+  );
+  const [careInsurancePremRate] = useState<number>(
     // 0.9 / 100, //三井住友銀行健康保険組合の被保険者負担率 see https://www.smbc-kenpo.or.jp/member/outline/fee.html#cat05Outline02
     0, // 40歳未満（以下？）は0
   );
