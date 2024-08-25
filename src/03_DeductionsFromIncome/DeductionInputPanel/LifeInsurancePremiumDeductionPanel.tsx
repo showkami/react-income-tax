@@ -1,5 +1,3 @@
-import { CurrencyForm } from "../../component/CurrencyForm";
-
 export const LifeInsurancePremiumDeductionPanel = () => {
   return (
     <>

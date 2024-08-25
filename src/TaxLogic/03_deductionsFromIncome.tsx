@@ -1,10 +1,4 @@
-import {
-  createContext,
-  PropsWithChildren,
-  useContext,
-  useMemo,
-  useState,
-} from "react";
+import { createContext, PropsWithChildren, useContext, useState } from "react";
 import { deductionTypes } from "./03_deductionTypes";
 import { plusPart } from "./util";
 import { sumArray } from "../utils";
