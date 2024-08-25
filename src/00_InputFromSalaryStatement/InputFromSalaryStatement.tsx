@@ -58,6 +58,10 @@ const generateRowDataFromEachColumn = (
   });
 };
 
+/**
+ * TODO
+ *    - 保険料率を変えられるようにする
+ */
 export const InputFromSalaryStatement = () => {
   const { setSalaryRevenue } = useIncome();
   const { setPaidSocialInsurancePremium } = useDeduction();
@@ -86,6 +90,21 @@ export const InputFromSalaryStatement = () => {
     useState<number[]>(zeroinit);
   const [incomeTaxes, setIncomeTaxes] = useState<number[]>(zeroinit);
   const [residentTaxes, setResidentTaxes] = useState<number[]>(zeroinit);
+
+  // 社会保険料の合計が変わった時には更新
+  // TODO: このeffectの使い方間違ってるんじゃないかなあ・・・effect不要なパターンな気がするが・・
+  useEffect(() => {
+    setPaidSocialInsurancePremium(
+      sumArray(pensionInsurancePrems) +
+        sumArray(healthInsurancePrems) +
+        sumArray(careInsurancePrems),
+    );
+  }, [
+    setPaidSocialInsurancePremium,
+    pensionInsurancePrems,
+    healthInsurancePrems,
+    careInsurancePrems,
+  ]);
 
   const handleTotalPayrollsChanged = (idx: number, newPayroll: number) => {
     // totalPayrollsの更新
@@ -131,14 +150,6 @@ export const InputFromSalaryStatement = () => {
     const newPensionInsurancePrems = [...pensionInsurancePrems];
     newPensionInsurancePrems[idx] = newPensionInsurancePrem;
     setPensionInsurancePrems(newPensionInsurancePrems);
-
-    // 社会保険料支払い総額の更新
-    // TODO: 3つ一気に更新される場合にこれで正しく更新できるのか・・・？
-    setPaidSocialInsurancePremium(
-      sumArray(newPensionInsurancePrems) +
-        sumArray(healthInsurancePrems) +
-        sumArray(careInsurancePrems),
-    );
   };
 
   const handleHealthInsurancePremChange = (
@@ -148,14 +159,6 @@ export const InputFromSalaryStatement = () => {
     const newHealthInsurancePrems = [...healthInsurancePrems];
     newHealthInsurancePrems[idx] = newHealthInsurancePrem;
     setHealthInsurancePrems(newHealthInsurancePrems);
-
-    // 社会保険料支払い総額の更新
-    // TODO: 3つ一気に更新される場合にこれで正しく更新できるのか・・・？
-    setPaidSocialInsurancePremium(
-      sumArray(pensionInsurancePrems) +
-        sumArray(newHealthInsurancePrems) +
-        sumArray(careInsurancePrems),
-    );
   };
 
   const handleCareInsurancePremChange = (
@@ -165,14 +168,6 @@ export const InputFromSalaryStatement = () => {
     const newCareInsurancePrems = [...careInsurancePrems];
     newCareInsurancePrems[idx] = newCareInsurancePrem;
     setCareInsurancePrems(newCareInsurancePrems);
-
-    // 社会保険料支払い総額の更新
-    // TODO: 3つ一気に更新される場合にこれで正しく更新できるのか・・・？
-    setPaidSocialInsurancePremium(
-      sumArray(pensionInsurancePrems) +
-        sumArray(healthInsurancePrems) +
-        sumArray(newCareInsurancePrems),
-    );
   };
 
   // AGGrid定義
