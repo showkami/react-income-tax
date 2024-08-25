@@ -25,7 +25,9 @@ type IncomeContextType = {
   miscellaneousIncome: number;
   setMiscellaneousIncome: React.Dispatch<React.SetStateAction<number>>;
 };
-export const IncomeContext = createContext<IncomeContextType>({});
+export const IncomeContext = createContext<IncomeContextType | undefined>(
+  undefined,
+);
 
 export const IncomeContextProvider = ({ children }: PropsWithChildren) => {
   // 利子所得
@@ -91,6 +93,9 @@ export const IncomeContextProvider = ({ children }: PropsWithChildren) => {
 };
 
 export const useIncome = () => {
-  // return
-  return useContext(IncomeContext);
+  const income = useContext(IncomeContext);
+  if (income === undefined) {
+    throw new Error("incomeがundefinedです。。。。");
+  }
+  return income;
 };
