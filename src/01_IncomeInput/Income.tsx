@@ -1,7 +1,8 @@
 import { Tab, Tabs } from "@mui/material";
 import React, { useState } from "react";
 import { SalaryIncomeInput } from "./IncomeInputPanel/SalaryIncomeInput";
-import { IncomeTypeId, incomeTypes } from "../TaxLogic/01_income";
+
+import { incomeTypes } from "../TaxLogic/01_incomeTypes";
 
 export const IncomeInput = () => {
   const [selectedTab, setSelectedTab] = useState<string>("salary");

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Stack } from "@mui/material";
 
 import { IncomeInput } from "./01_IncomeInput/Income";
-import { IncomeContextProvider, incomeTypes } from "./TaxLogic/01_income";
+import { IncomeContextProvider } from "./TaxLogic/01_income";
 import { AggregationOfProfitLoss } from "./02_AggregationOfProfitLoss/AggregationOfProfitLoss";
 import {
   DeductionsFromIncome,
@@ -13,6 +13,7 @@ import { InputFromSalaryStatement } from "./00_InputFromSalaryStatement/InputFro
 import { Accordion } from "./component/Accordion";
 import { TaxCredit } from "./04_TaxCredit/TaxCredit";
 import { TaxStatement } from "./10_TaxStatement/TaxStatement";
+import { incomeTypes } from "./TaxLogic/01_incomeTypes";
 
 function App() {
   // 所得控除の元となる数値state
