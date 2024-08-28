@@ -5,6 +5,8 @@ import { sumArray } from "../utils";
 import { getStandardizedMonthlyRemuneration } from "./getStandardizedMonthlyRemuneration";
 import { useIncome } from "../TaxLogic/01_income";
 import { useDeduction } from "../TaxLogic/03_deductionsFromIncome";
+import { PercentageForm } from "../component/PercentageForm";
+import { Typography } from "@mui/material";
 
 type MonthlySalaryWithhold = {
   month: string;
@@ -61,11 +63,13 @@ export const InputFromSalaryStatement = () => {
   const { setPaidSocialInsurancePremium } = useDeduction();
 
   // 保険料率とか
-  const [pensionInsurancePremRate] = useState<number>(18.3 / 2 / 100);
-  const [healthInsurancePremRate] = useState<number>(
-    3.05 / 100, //三井住友銀行健康保険組合の被保険者負担率 see https://www.smbc-kenpo.or.jp/member/outline/fee.html#cat05Outline02
-  );
-  const [careInsurancePremRate] = useState<number>(
+  const [pensionInsurancePremRate, setPensionInsurancePremRate] =
+    useState<number>(18.3 / 2 / 100);
+  const [healthInsurancePremRate, setHealthInsurancePremRate] =
+    useState<number>(
+      3.05 / 100, //三井住友銀行健康保険組合の被保険者負担率 see https://www.smbc-kenpo.or.jp/member/outline/fee.html#cat05Outline02
+    );
+  const [careInsurancePremRate, setCareInsurancePremRate] = useState<number>(
     // 0.9 / 100, //三井住友銀行健康保険組合の被保険者負担率 see https://www.smbc-kenpo.or.jp/member/outline/fee.html#cat05Outline02
     0, // 40歳未満（以下？）は0
   );
@@ -232,9 +236,28 @@ export const InputFromSalaryStatement = () => {
 
   return (
     <>
-      厚生年金保険料率: {pensionInsurancePremRate * 100} %<br />
-      健康保険料率: {healthInsurancePremRate * 100} %<br />
-      介護保険料率: {careInsurancePremRate * 100} %<br />
+      厚生年金保険料率:{" "}
+      <PercentageForm
+        value={pensionInsurancePremRate}
+        onChangeValue={setPensionInsurancePremRate}
+      />
+      <br />
+      健康保険料率:{" "}
+      <PercentageForm
+        value={healthInsurancePremRate}
+        onChangeValue={setHealthInsurancePremRate}
+      />
+      <br />
+      介護保険料率:{" "}
+      <PercentageForm
+        value={careInsurancePremRate}
+        onChangeValue={setCareInsurancePremRate}
+      />
+      <br />
+      <Typography variant={"caption"}>
+        【注】
+        上の料率を変更しても、すでに下表に入力された数値は変更されません。料率は最初に変更してください。
+      </Typography>
       <Grid<MonthlySalaryWithhold>
         height={600}
         columnDefs={columnDefs}

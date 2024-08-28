@@ -35,5 +35,6 @@ export const uneditableMoneyColumn = {
 
 export const editableMoneyColumn = {
   editable: true,
+  // cellEditor: "agNumberCellEditor",
   ...uneditableMoneyColumn,
 };
