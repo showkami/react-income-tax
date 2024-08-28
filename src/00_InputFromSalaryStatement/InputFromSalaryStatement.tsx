@@ -13,8 +13,6 @@ type MonthlySalaryWithhold = {
   employeePensionInsurancePrem: number; // 厚生年金保険料
   healthInsurancePrem: number; // 健康保険料
   careInsurancePrem: number; // 介護保険料
-  incomeTax: number; // 所得税
-  residentTax: number; // 住民税
 };
 
 const payMonths = [
@@ -41,8 +39,6 @@ const generateRowDataFromEachColumn = (
   employeePensionInsurancePrems: number[],
   healthInsurancePrems: number[],
   careInsurancePrems: number[],
-  incomeTaxes: number[],
-  residentTaxes: number[],
 ): MonthlySalaryWithhold[] => {
   return months.map((month, idx) => {
     return {
@@ -52,8 +48,6 @@ const generateRowDataFromEachColumn = (
       employeePensionInsurancePrem: employeePensionInsurancePrems[idx],
       healthInsurancePrem: healthInsurancePrems[idx],
       careInsurancePrem: careInsurancePrems[idx],
-      incomeTax: incomeTaxes[idx],
-      residentTax: residentTaxes[idx],
     };
   });
 };
@@ -86,8 +80,6 @@ export const InputFromSalaryStatement = () => {
     useState<number[]>(zeroinit);
   const [careInsurancePrems, setCareInsurancePrems] =
     useState<number[]>(zeroinit);
-  const [incomeTaxes, setIncomeTaxes] = useState<number[]>(zeroinit);
-  const [residentTaxes, setResidentTaxes] = useState<number[]>(zeroinit);
 
   // 社会保険料の合計が変わった時には更新
   // TODO: このeffectの使い方間違ってるんじゃないかなあ・・・effect不要なパターンな気がするが・・
@@ -201,18 +193,6 @@ export const InputFromSalaryStatement = () => {
       width: 150,
       ...editableMoneyColumn,
     },
-    {
-      field: "incomeTax",
-      headerName: "所得税",
-      width: 150,
-      ...editableMoneyColumn,
-    },
-    {
-      field: "residentTax",
-      headerName: "住民税",
-      width: 150,
-      ...editableMoneyColumn,
-    },
   ]);
 
   const [rowData, setRowData] = useState<MonthlySalaryWithhold[]>([]);
@@ -224,8 +204,6 @@ export const InputFromSalaryStatement = () => {
       pensionInsurancePrems,
       healthInsurancePrems,
       careInsurancePrems,
-      incomeTaxes,
-      residentTaxes,
     );
     setRowData(newRowData);
   }, [
@@ -234,8 +212,6 @@ export const InputFromSalaryStatement = () => {
     pensionInsurancePrems,
     healthInsurancePrems,
     careInsurancePrems,
-    incomeTaxes,
-    residentTaxes,
   ]);
   const handleCellValueChanged = (evt: CellValueChangedEvent) => {
     const month: string = evt.data.month;
@@ -251,14 +227,6 @@ export const InputFromSalaryStatement = () => {
       handleHealthInsurancePremChange(idx, evt.newValue);
     } else if (columnId === "careInsurancePrem") {
       handleCareInsurancePremChange(idx, evt.newValue);
-    } else if (columnId === "incomeTax") {
-      const newIncomeTaxes = [...incomeTaxes];
-      newIncomeTaxes[idx] = evt.newValue;
-      setIncomeTaxes(newIncomeTaxes);
-    } else if (columnId === "residentTax") {
-      const newResidentTaxes = [...residentTaxes];
-      newResidentTaxes[idx] = evt.newValue;
-      setResidentTaxes(newResidentTaxes);
     }
   };
 
