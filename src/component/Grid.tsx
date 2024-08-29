@@ -14,7 +14,14 @@ export const Grid = <TData extends any>(props: GridProps<TData>) => {
   const agGridProps: AgGridReactProps<TData> = rest;
   return (
     <div className={"ag-theme-quartz-dark"} style={{ height: height }}>
-      <AgGridReact<TData> rowHeight={35} {...agGridProps} />
+      <AgGridReact<TData>
+        rowHeight={35}
+        gridOptions={{
+          suppressDragLeaveHidesColumns: true,
+          suppressMovableColumns: true,
+        }}
+        {...agGridProps}
+      />
     </div>
   );
 };

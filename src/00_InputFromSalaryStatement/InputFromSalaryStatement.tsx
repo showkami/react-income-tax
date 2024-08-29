@@ -109,8 +109,12 @@ export const InputFromSalaryStatement = () => {
     // 給与収入金額の更新
     setSalaryRevenue(sumArray(newTotalPayrolls));
 
-    // 該当する月の標準報酬月額の更新 // TODO: 標準報酬月額か標準賞与額かどっちを取りに行くかの分岐が必要
-    const newStandardizedPay = getStandardizedMonthlyRemuneration(newPayroll);
+    // 該当する月の標準報酬月額の更新
+    const isBonus = idx >= 12;
+    const newStandardizedPay = getStandardizedMonthlyRemuneration(
+      newPayroll,
+      isBonus,
+    );
     handleStandardizedPayChange(idx, newStandardizedPay);
   };
 

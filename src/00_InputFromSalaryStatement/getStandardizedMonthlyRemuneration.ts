@@ -168,15 +168,24 @@ const data: Data[] = [
 ];
 
 // 月額給与に対してStandardizedMonthlyRemunerationを返します
-export const getStandardizedMonthlyRemuneration = (salary: number) => {
-  for (let range of data) {
-    if (
-      (range.minSalary === undefined || range.minSalary <= salary) &&
-      (range.maxSalary === undefined || salary < range.maxSalary)
-    ) {
-      return range.standardizedMonthlyRemuneration;
+export const getStandardizedMonthlyRemuneration = (
+  salary: number,
+  isBonus: boolean,
+) => {
+  if (isBonus) {
+    // 標準賞与額は、賞与総額から1000円未満を切り捨て
+    // TODO: 標準賞与の年間上顎がある（健康保険に対しては573万円、厚生年金に対しては1ヶ月150万円？？）
+    return Math.floor(salary / 1000) * 1000;
+  } else {
+    // 標準報酬月額
+    for (let range of data) {
+      if (
+        (range.minSalary === undefined || range.minSalary <= salary) &&
+        (range.maxSalary === undefined || salary < range.maxSalary)
+      ) {
+        return range.standardizedMonthlyRemuneration;
+      }
     }
+    throw new Error("標準報酬月額が見つかりませんでした");
   }
-
-  throw new Error("標準報酬月額が見つかりませんでした");
 };
