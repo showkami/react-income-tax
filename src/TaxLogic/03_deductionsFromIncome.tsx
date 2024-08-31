@@ -3,6 +3,10 @@ import { deductionTypes } from "./03_deductionTypes";
 import { sumArray } from "../utils";
 import { useMedicalExpensesDeduction } from "./03_deductionsFromIncome/medicalExpenses";
 import { useSocialInsurancePremiumDeduction } from "./03_deductionsFromIncome/socialInsurancePremium";
+import {
+  InfoForEachContract,
+  useLifeInsurancePremium,
+} from "./03_deductionsFromIncome/lifeInsurancePremium";
 
 // ある所得控除項目の、所得税用の所得控除・住民税用の所得控除
 type DeductionAmount = { forIncomeTax: number; forResidentTax: number };
@@ -17,6 +21,10 @@ type DeductionContextType = {
   setCompensatedMedicalExpenses: React.Dispatch<React.SetStateAction<number>>;
   paidSocialInsurancePremium: number;
   setPaidSocialInsurancePremium: React.Dispatch<React.SetStateAction<number>>;
+  lifeInsuranceContracts: InfoForEachContract[];
+  setLifeInsuranceContracts: React.Dispatch<
+    React.SetStateAction<InfoForEachContract[]>
+  >;
   totalDeductionAmount: DeductionAmount;
 };
 const DeductionContext = createContext<DeductionContextType | undefined>(
@@ -52,17 +60,12 @@ export const DeductionsContextProvider = ({ children }: PropsWithChildren) => {
   // 小規模企業共済等掛金控除
 
   // 生命保険料控除
-  // TODO: 新契約のみ or 旧契約のみ or 新旧両方 の3パターンある...
-  // const [paidAmountForIppanNewCont, setPaidAmountForIppanNewCont] =
-  //   useState<number>(0);
-  // const [paidAmountForIppanOldCont, setPaidAmountForIppanOldCont] =
-  //   useState<number>(0);
-  // const [paidAmountForKaigoOrIryoNewCont, setPaidAmountForKaigoOrIryoNewCont] =
-  //   useState<number>(0);
-  // const [paidAmountForNenkinNewCont, setPaidAmountForNenkinNewCont] =
-  //   useState<number>(0);
-  // const [paidAmountForNenkinOldCont, setPaidAmountForNenkinOldCont] =
-  //   useState<number>(0);
+  const {
+    lifeInsurancePremiumDeductionAmt,
+    lifeInsuranceContracts,
+    setLifeInsuranceContracts,
+  } = useLifeInsurancePremium();
+  deductionsAmount.lifeINsurancePremium = lifeInsurancePremiumDeductionAmt;
 
   // 地震保険料控除
 
@@ -101,12 +104,18 @@ export const DeductionsContextProvider = ({ children }: PropsWithChildren) => {
   };
 
   const values: DeductionContextType = {
+    // 医療費控除用
     paidMedicalExpenses,
     setPaidMedicalExpenses,
     compensatedMedicalExpenses,
     setCompensatedMedicalExpenses,
+    // 社会保険料控除用
     paidSocialInsurancePremium,
     setPaidSocialInsurancePremium,
+    // 生命保険料控除用
+    lifeInsuranceContracts,
+    setLifeInsuranceContracts,
+    // 控除すべて
     totalDeductionAmount,
   };
 
