@@ -2,6 +2,7 @@ import { createContext, PropsWithChildren, useContext, useState } from "react";
 import { deductionTypes } from "./03_deductionTypes";
 import { sumArray } from "../utils";
 import { useMedicalExpensesDeduction } from "./03_deductionsFromIncome/medicalExpenses";
+import { useSocialInsurancePremiumDeduction } from "./03_deductionsFromIncome/socialInsurancePremium";
 
 // ある所得控除項目の、所得税用の所得控除・住民税用の所得控除
 type DeductionAmount = { forIncomeTax: number; forResidentTax: number };
@@ -41,12 +42,12 @@ export const DeductionsContextProvider = ({ children }: PropsWithChildren) => {
   deductionsAmount.medicalExpenses = medicalExpensesDeductionAmt;
 
   // 社会保険料控除
-  const [paidSocialInsurancePremium, setPaidSocialInsurancePremium] =
-    useState<number>(0);
-  deductionsAmount.socialInsurancePremium = {
-    forIncomeTax: paidSocialInsurancePremium,
-    forResidentTax: paidSocialInsurancePremium,
-  };
+  const {
+    socialInsurancePremiumDeductionAmt,
+    paidSocialInsurancePremium,
+    setPaidSocialInsurancePremium,
+  } = useSocialInsurancePremiumDeduction();
+  deductionsAmount.socialInsurancePremium = socialInsurancePremiumDeductionAmt;
 
   // 小規模企業共済等掛金控除
 
