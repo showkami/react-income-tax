@@ -133,7 +133,7 @@ export const LifeInsurancePremiumDeductionPanel = () => {
       </Box>
 
       <Grid<InfoForEachContract>
-        height={300}
+        height={210}
         columnDefs={columnDefs}
         rowData={lifeInsuranceContracts}
         onCellValueChanged={handleCellValueChanged}
