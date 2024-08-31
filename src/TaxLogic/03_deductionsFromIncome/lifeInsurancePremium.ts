@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { plusPart } from "../util";
-import { deductionTypes } from "../03_deductionTypes";
 
 type LifeInsuranceCategory = "general" | "careOrMedical" | "pension";
 export type InfoForEachContract = {

@@ -7,7 +7,7 @@ import {
 } from "ag-grid-community";
 import { InfoForEachContract } from "../../TaxLogic/03_deductionsFromIncome/lifeInsurancePremium";
 import { editableMoneyColumn, Grid } from "../../component/Grid";
-import { Alert, Box, Button, Snackbar, Typography } from "@mui/material";
+import { Box, Button, Snackbar, Typography } from "@mui/material";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import BackspaceIcon from "@mui/icons-material/Backspace";
 
