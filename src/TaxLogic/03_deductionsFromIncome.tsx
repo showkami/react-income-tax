@@ -3,6 +3,10 @@ import { deductionTypes } from "./03_deductionTypes";
 import { sumArray } from "../utils";
 import { useMedicalExpensesDeduction } from "./03_deductionsFromIncome/medicalExpenses";
 import { useSocialInsurancePremiumDeduction } from "./03_deductionsFromIncome/socialInsurancePremium";
+import {
+  InfoForEachContract,
+  useLifeInsurancePremium,
+} from "./03_deductionsFromIncome/lifeInsurancePremium";
 
 // ある所得控除項目の、所得税用の所得控除・住民税用の所得控除
 type DeductionAmount = { forIncomeTax: number; forResidentTax: number };
@@ -17,6 +21,10 @@ type DeductionContextType = {
   setCompensatedMedicalExpenses: React.Dispatch<React.SetStateAction<number>>;
   paidSocialInsurancePremium: number;
   setPaidSocialInsurancePremium: React.Dispatch<React.SetStateAction<number>>;
+  lifeInsuranceContracts: InfoForEachContract[];
+  setLifeInsuranceContracts: React.Dispatch<
+    React.SetStateAction<InfoForEachContract[]>
+  >;
   totalDeductionAmount: DeductionAmount;
 };
 const DeductionContext = createContext<DeductionContextType | undefined>(
@@ -52,42 +60,12 @@ export const DeductionsContextProvider = ({ children }: PropsWithChildren) => {
   // 小規模企業共済等掛金控除
 
   // 生命保険料控除
-  // TODO: 新契約のみ or 旧契約のみ or 新旧両方 の3パターンある...
-  // 各契約について、「支払った保険料」「剰余金・割戻金の合計額」を計算していく
-  type InfoForEachContract = {
-    isNew: boolean;
-    category: "general" | "careOrMedical" | "pension";
-    paidAmount: number;
-    rebatedAmount: number;
-  };
-  const [lifeInsuranceContracts, setLifeInsuranceContracts] = useState<
-    InfoForEachContract[]
-  >([]);
-  // 新旧、一般・介護医療・年金の各カテゴリごとの控除額
-  const paidLifeInsurancePrems = {
-    general: { old: 0, new: 0 },
-    careOrMedical: { old: 0, new: 0 }, // 本当は旧契約の介護医療保険は無いが…入れないと型がめんどいので・・・
-    pension: { old: 0, new: 0 },
-  };
-  for (const contract of lifeInsuranceContracts) {
-    const category = contract.category;
-    if (contract.isNew)
-      paidLifeInsurancePrems[category].new +=
-        contract.paidAmount - contract.rebatedAmount;
-    if (contract.isNew)
-      paidLifeInsurancePrems[category].old +=
-        contract.paidAmount - contract.rebatedAmount;
-  }
-  const deduction = (gross: number)
-  const isAllNew =
-    lifeInsuranceContracts.filter((cont) => cont.isNew).length ===
-    lifeInsuranceContracts.length;
-  const isAllOld =
-    lifeInsuranceContracts.filter((cont) => !cont.isNew).length ===
-    lifeInsuranceContracts.length;
-  if (isAllNew) {
-    paidLifeInsurancePrems.general.new
-  }
+  const {
+    lifeInsurancePremiumDeductionAmt,
+    lifeInsuranceContracts,
+    setLifeInsuranceContracts,
+  } = useLifeInsurancePremium();
+  deductionsAmount.lifeINsurancePremium = lifeInsurancePremiumDeductionAmt;
 
   // 地震保険料控除
 
@@ -126,12 +104,18 @@ export const DeductionsContextProvider = ({ children }: PropsWithChildren) => {
   };
 
   const values: DeductionContextType = {
+    // 医療費控除用
     paidMedicalExpenses,
     setPaidMedicalExpenses,
     compensatedMedicalExpenses,
     setCompensatedMedicalExpenses,
+    // 社会保険料控除用
     paidSocialInsurancePremium,
     setPaidSocialInsurancePremium,
+    // 生命保険料控除用
+    lifeInsuranceContracts,
+    setLifeInsuranceContracts,
+    // 控除すべて
     totalDeductionAmount,
   };
 
