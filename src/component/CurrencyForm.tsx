@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { Ref, useState } from "react";
 import { Input } from "@mui/material";
 import { formatCcy } from "../utils";
 
 interface CurrencyFormProps {
   value: number;
   onChangeValue: (value: number) => void;
+  inputRef?: Ref<HTMLInputElement>;
 }
 
 export const CurrencyForm = (props: CurrencyFormProps) => {
@@ -51,6 +52,7 @@ export const CurrencyForm = (props: CurrencyFormProps) => {
       onFocus={handleFocus}
       onBlur={handleBlur}
       onChange={handleChange}
+      inputRef={props.inputRef}
     />
   );
 };
