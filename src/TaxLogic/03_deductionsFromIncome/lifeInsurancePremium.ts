@@ -26,7 +26,8 @@ export const useLifeInsurancePremium = () => {
   for (const contract of lifeInsuranceContracts) {
     const category = contract.category;
     if (!contract.isNew && category === "careOrMedical") {
-      throw new Error("介護医療保険では旧契約は適用できません。");
+      // throw new Error("介護医療保険では旧契約は適用できません。");
+      paidPrems[category].old = 0;
     }
     const amount = plusPart(contract.paidAmount - contract.rebatedAmount);
     contract.isNew
