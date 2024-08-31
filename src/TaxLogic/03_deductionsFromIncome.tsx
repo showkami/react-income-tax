@@ -1,7 +1,8 @@
-import { createContext, PropsWithChildren, useContext, useState } from "react";
+import { createContext, PropsWithChildren, useContext } from "react";
 import { deductionTypes } from "./03_deductionTypes";
-import { plusPart } from "./util";
 import { sumArray } from "../utils";
+import { useMedicalExpensesDeduction } from "./03_deductionsFromIncome/medicalExpenses";
+import { useSocialInsurancePremiumDeduction } from "./03_deductionsFromIncome/socialInsurancePremium";
 
 // ある所得控除項目の、所得税用の所得控除・住民税用の所得控除
 type DeductionAmount = { forIncomeTax: number; forResidentTax: number };
@@ -31,27 +32,22 @@ export const DeductionsContextProvider = ({ children }: PropsWithChildren) => {
   // 雑損控除
 
   // 医療費控除
-  // TODO: 医療費控除の特例＝セルフメディケーション税制に対応する
-  const [paidMedicalExpenses, setPaidMedicalExpenses] = useState<number>(0);
-  const [compensatedMedicalExpenses, setCompensatedMedicalExpenses] =
-    useState<number>(0);
-  deductionsAmount.medicalExpenses = {
-    forIncomeTax: plusPart(
-      paidMedicalExpenses - compensatedMedicalExpenses - 100_000,
-    ),
-    forResidentTax: plusPart(
-      paidMedicalExpenses - compensatedMedicalExpenses - 100_000,
-    ),
-    // NOTE: 総所得金額等が200万円未満の場合は、-100000 ではなく総所得金額等の5%を引く
-  };
+  const {
+    medicalExpensesDeductionAmt,
+    paidMedicalExpenses,
+    setPaidMedicalExpenses,
+    compensatedMedicalExpenses,
+    setCompensatedMedicalExpenses,
+  } = useMedicalExpensesDeduction();
+  deductionsAmount.medicalExpenses = medicalExpensesDeductionAmt;
 
   // 社会保険料控除
-  const [paidSocialInsurancePremium, setPaidSocialInsurancePremium] =
-    useState<number>(0);
-  deductionsAmount.socialInsurancePremium = {
-    forIncomeTax: paidSocialInsurancePremium,
-    forResidentTax: paidSocialInsurancePremium,
-  };
+  const {
+    socialInsurancePremiumDeductionAmt,
+    paidSocialInsurancePremium,
+    setPaidSocialInsurancePremium,
+  } = useSocialInsurancePremiumDeduction();
+  deductionsAmount.socialInsurancePremium = socialInsurancePremiumDeductionAmt;
 
   // 小規模企業共済等掛金控除
 
