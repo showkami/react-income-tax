@@ -17,6 +17,7 @@ export const Accordion = (props: AccordionProps) => {
     <MuiAccordion
       disableGutters // 開閉時に上下に動かないようにする
       defaultExpanded={props.defaultExpanded ?? false}
+      elevation={5}
     >
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
         <b>{props.title}</b>

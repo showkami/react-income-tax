@@ -144,7 +144,7 @@ export const TaxStatement = () => {
     <>
       ※ふるさと納税上限金額: {formatCcy(maxFurusato)}
       <Grid<StatementRow>
-        height={270}
+        height={231}
         columnDefs={columnDefs}
         rowData={rowData}
       />

@@ -35,7 +35,7 @@ export const Grid = <TData extends any>(props: GridProps<TData>) => {
   return (
     <div className={themeName} style={style}>
       <AgGridReact<TData>
-        rowHeight={35}
+        rowHeight={30}
         gridOptions={{
           suppressDragLeaveHidesColumns: true,
           suppressMovableColumns: true,

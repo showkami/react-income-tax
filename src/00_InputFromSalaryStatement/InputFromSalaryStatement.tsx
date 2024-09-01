@@ -170,7 +170,14 @@ export const InputFromSalaryStatement = () => {
 
   // AGGrid定義
   const [columnDefs] = useState<ColDef<MonthlySalaryWithhold>[]>([
-    { field: "month", sortable: false, width: 90, pinned: true },
+    {
+      field: "month",
+      headerName: "月",
+      type: "rightAligned",
+      sortable: false,
+      width: 71,
+      pinned: true,
+    },
     {
       field: "totalPayroll",
       headerName: "給与総額",
@@ -263,7 +270,7 @@ export const InputFromSalaryStatement = () => {
         上の料率を変更しても、すでに下表に入力された数値は変更されません。料率は最初に変更してください。
       </Typography>
       <Grid<MonthlySalaryWithhold>
-        height={600}
+        height={471}
         columnDefs={columnDefs}
         rowData={rowData}
         onCellValueChanged={handleCellValueChanged}
