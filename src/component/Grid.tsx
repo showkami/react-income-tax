@@ -29,8 +29,11 @@ export const Grid = <TData extends any>(props: GridProps<TData>) => {
     fontSize: theme.typography.fontSize,
   };
 
+  const isDarkMode = theme.palette.mode === "dark";
+  const themeName = isDarkMode ? "ag-theme-quartz-dark" : "ag-theme-quartz";
+
   return (
-    <div className={"ag-theme-quartz-dark"} style={style}>
+    <div className={themeName} style={style}>
       <AgGridReact<TData>
         rowHeight={35}
         gridOptions={{
