@@ -3,8 +3,10 @@ export const sumArray = (arr: number[]) => {
 };
 
 export const formatCcy = (value: number) => {
-  return value.toLocaleString("ja-JP", {
-    style: "currency",
-    currency: "JPY",
-  });
+  return value
+    .toLocaleString("ja-JP", {
+      style: "currency",
+      currency: "JPY",
+    })
+    .replace("-", "▲");
 };

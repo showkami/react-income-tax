@@ -5,11 +5,13 @@ import {
 } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the Data Grid
 import "ag-grid-community/styles/ag-theme-quartz.css";
+import "ag-grid-community/styles/ag-theme-material.css";
 
 import { formatCcy } from "../utils";
 import { ValueFormatterParams } from "ag-grid-community";
 import { CurrencyForm } from "./CurrencyForm";
-import { useEffect, useRef } from "react";
+import { CSSProperties, useEffect, useRef } from "react";
+import { useTheme } from "@mui/material";
 
 type GridProps<TData> = {
   height: number;
@@ -18,10 +20,22 @@ type GridProps<TData> = {
 export const Grid = <TData extends any>(props: GridProps<TData>) => {
   const { height, ...rest } = props;
   const agGridProps: AgGridReactProps<TData> = rest;
+
+  const theme = useTheme();
+
+  const style: CSSProperties = {
+    height: height,
+    fontFamily: theme.typography.fontFamily,
+    fontSize: theme.typography.fontSize,
+  };
+
+  const isDarkMode = theme.palette.mode === "dark";
+  const themeName = isDarkMode ? "ag-theme-quartz-dark" : "ag-theme-quartz";
+
   return (
-    <div className={"ag-theme-quartz-dark"} style={{ height: height }}>
+    <div className={themeName} style={style}>
       <AgGridReact<TData>
-        rowHeight={35}
+        rowHeight={30}
         gridOptions={{
           suppressDragLeaveHidesColumns: true,
           suppressMovableColumns: true,
