@@ -170,7 +170,7 @@ export const InputFromSalaryStatement = () => {
 
   // AGGrid定義
   const [columnDefs] = useState<ColDef<MonthlySalaryWithhold>[]>([
-    { field: "month", sortable: false, width: 80, pinned: true },
+    { field: "month", sortable: false, width: 90, pinned: true },
     {
       field: "totalPayroll",
       headerName: "給与総額",
